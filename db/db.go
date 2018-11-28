@@ -3,35 +3,33 @@ package db
 import (
 	"fmt"
 
-	"github.com/satori/go.uuid"
-
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 	"github.com/ksiner/wiki/model"
 )
 
 type Config struct {
-	dbConnStr string
-	dbDialect string
+	DbConnStr string
+	DbDialect string
 }
 
 type DbConn struct {
-	cfg Config
+	Cfg Config
 }
 
 func New(cfg Config) *DbConn {
-	return &DbConn{cfg: cfg}
+	return &DbConn{Cfg: cfg}
 }
 
 func (dbc *DbConn) SelectArticles() ([]*model.Article, error) {
-	db, err := gorm.Open(dbc.cfg.dbDialect, dbc.cfg.dbConnStr)
+	db, err := gorm.Open(dbc.Cfg.DbDialect, dbc.Cfg.DbConnStr)
 	if err != nil {
 		fmt.Printf("Error in \"db.SelectArticles\" OPEN DB: %v", err.Error())
 		return nil, err
 	}
 	defer db.Close()
 	articles := make([]*model.Article, 0)
-	db.Find(articles).Order("views desc")
+	db.Find(&articles).Order("views desc")
 	if db.Error != nil {
 		fmt.Printf("Error in \"db.SelectArticles\" GET DATA: %v", err.Error())
 		err = db.Error
@@ -41,14 +39,14 @@ func (dbc *DbConn) SelectArticles() ([]*model.Article, error) {
 }
 
 func (dbc *DbConn) SelectArticlesByCatId(catID string) ([]*model.Article, error) {
-	db, err := gorm.Open(dbc.cfg.dbDialect, dbc.cfg.dbConnStr)
+	db, err := gorm.Open(dbc.Cfg.DbDialect, dbc.Cfg.DbConnStr)
 	if err != nil {
 		fmt.Printf("Error in \"db.SelectArticlesByCatId\" OPEN DB: %v", err.Error())
 		return nil, err
 	}
 	defer db.Close()
 	articles := make([]*model.Article, 0)
-	db.Find(articles).Where("catid = ?", catID).Order("views desc")
+	db.Find(&articles).Where("catid = ?", catID).Order("views desc")
 	if db.Error != nil {
 		fmt.Printf("Error in \"db.SelectArticlesByCatId\" GET DATA: %v", err.Error())
 		err = db.Error
@@ -59,14 +57,14 @@ func (dbc *DbConn) SelectArticlesByCatId(catID string) ([]*model.Article, error)
 }
 
 func (dbc *DbConn) SelectArticle(artID string) (*model.Article, error) {
-	db, err := gorm.Open(dbc.cfg.dbDialect, dbc.cfg.dbConnStr)
+	db, err := gorm.Open(dbc.Cfg.DbDialect, dbc.Cfg.DbConnStr)
 	if err != nil {
 		fmt.Printf("Error in \"db.SelectArticle\" OPEN DB: %v", err.Error())
 		return nil, err
 	}
 	defer db.Close()
 	article := &model.Article{}
-	db.First(article).Where("id = ?", artID).Order("views desc")
+	db.Where("id = ?", artID).First(&article)
 	if db.Error != nil {
 		fmt.Printf("Error in \"db.SelectArticle\" GET DATA: %v", err.Error())
 		err = db.Error
@@ -77,16 +75,13 @@ func (dbc *DbConn) SelectArticle(artID string) (*model.Article, error) {
 }
 
 func (dbc *DbConn) InsertArticle(article *model.Article) error {
-	db, err := gorm.Open(dbc.cfg.dbDialect, dbc.cfg.dbConnStr)
+	db, err := gorm.Open(dbc.Cfg.DbDialect, dbc.Cfg.DbConnStr)
 	if err != nil {
 		fmt.Printf("Error in \"db.InsertArticle\" OPEN DB: %v", err.Error())
 		return err
 	}
 	defer db.Close()
-	for db.NewRecord(article) != true {
-		article.ID = uuid.Must(uuid.NewV4()).String()
-	}
-	db.Create(article)
+	db.Save(article)
 	if db.Error != nil {
 		fmt.Printf("Error in \"db.InsertArticle\" INSERT DB: %v", err.Error())
 		err = db.Error
@@ -97,16 +92,13 @@ func (dbc *DbConn) InsertArticle(article *model.Article) error {
 }
 
 func (dbc *DbConn) InsertCategory(category *model.Category) error {
-	db, err := gorm.Open(dbc.cfg.dbDialect, dbc.cfg.dbConnStr)
+	db, err := gorm.Open(dbc.Cfg.DbDialect, dbc.Cfg.DbConnStr)
 	if err != nil {
 		fmt.Printf("Error in \"db.InsertCategory\" OPEN DB: %v", err.Error())
 		return err
 	}
 	defer db.Close()
-	for db.NewRecord(category) != true {
-		category.ID = uuid.Must(uuid.NewV4()).String()
-	}
-	db.Create(category)
+	db.Save(category)
 	if db.Error != nil {
 		fmt.Printf("Error in \"db.InsertCategory\" INSERT DB: %v", err.Error())
 		err = db.Error
@@ -117,14 +109,14 @@ func (dbc *DbConn) InsertCategory(category *model.Category) error {
 }
 
 func (dbc *DbConn) UpdateArticle(article *model.Article, addView bool) error {
-	db, err := gorm.Open(dbc.cfg.dbDialect, dbc.cfg.dbConnStr)
+	db, err := gorm.Open(dbc.Cfg.DbDialect, dbc.Cfg.DbConnStr)
 	if err != nil {
 		fmt.Printf("Error in \"db.UpdateArticle\" OPEN DB: %v", err.Error())
 		return err
 	}
 	defer db.Close()
 	if addView {
-		db.Model(article).Update("views", gorm.Expr("views+1"))
+		db.Model(article).UpdateColumn("views", gorm.Expr("views+1"))
 		if db.Error != nil {
 			fmt.Printf("Error in \"db.UpdateArticle\" UPDATE VIEWS DB: %v", err.Error())
 			err = db.Error

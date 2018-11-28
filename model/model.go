@@ -14,13 +14,13 @@ type Article struct {
 	Header  string
 	Content string
 	ID      string
-	Cat     string
-	views   int64
+	Catid   string
+	Views   int64 `gorm:"default:1"`
 }
 
 type Category struct {
 	ID       string
-	ParentID string
+	Parentid string
 	Name     string
 }
 

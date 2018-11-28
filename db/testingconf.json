@@ -1,0 +1,4 @@
+{
+	"dbDialect": "mysql",
+	"dbConnStr": "dbuser:Cgenybr_57@/wiki?charset=utf8&parseTime=True&loc=Local"
+}
