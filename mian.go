@@ -1,0 +1,5 @@
+package wiki
+
+func main() {
+
+}
