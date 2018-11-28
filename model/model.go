@@ -4,27 +4,24 @@ type database interface {
 	SelectArticles() ([]*Article, error)
 	SelectArticlesByCatId(string) ([]*Article, error)
 	SelectArticle(string) (*Article, error)
-	UpdateArticle(*Article) error
+	UpdateArticle(*Article, bool) error
 	InsertArticle(*Article) error
 	InsertCategory(*Category) error
 }
 
 type Article struct {
-	Pic     *Picture
+	Pic     string
 	Header  string
 	Content string
-	Id      string
-	Cat     *Category
-}
-
-type Picture struct {
-	Name string
-	Pic  []byte
+	ID      string
+	Cat     string
+	views   int64
 }
 
 type Category struct {
-	Id   string
-	Name string
+	ID       string
+	ParentID string
+	Name     string
 }
 
 type Model struct {
@@ -39,16 +36,16 @@ func (m *Model) GetArticles() ([]*Article, error) {
 	return m.db.SelectArticles()
 }
 
-func (m *Model) GetArticlesByCatId(catId string) ([]*Article, error) {
-	return m.db.SelectArticlesByCatId(catId)
+func (m *Model) GetArticlesByCatId(catID string) ([]*Article, error) {
+	return m.db.SelectArticlesByCatId(catID)
 }
 
-func (m *Model) Getrticle(artId string) (*Article, error) {
-	return m.db.SelectArticle(artId)
+func (m *Model) Getrticle(artID string) (*Article, error) {
+	return m.db.SelectArticle(artID)
 }
 
-func (m *Model) EditArticle(article *Article) error {
-	return m.db.UpdateArticle(article)
+func (m *Model) EditArticle(article *Article, addView bool) error {
+	return m.db.UpdateArticle(article, addView)
 }
 
 func (m *Model) AddArticle(article *Article) error {
