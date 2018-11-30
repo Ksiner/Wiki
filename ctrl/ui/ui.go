@@ -1,6 +1,7 @@
 package ui
 
 import (
+	"context"
 	"encoding/json"
 	"io/ioutil"
 	"net"
@@ -18,14 +19,17 @@ type Config struct {
 	Assets string
 }
 
-func Start(db db.DataBase, l net.Listener, cfg Config) {
+func Start(db db.DataBase, l net.Listener, cfg Config, cancelFunc context.CancelFunc) {
 	server := http.Server{
 		Handler:        routing(db, cfg),
 		ReadTimeout:    60 * time.Second,
 		WriteTimeout:   60 * time.Second,
 		MaxHeaderBytes: 1 << 16,
 	}
-	server.Serve(l)
+	go func() {
+		defer cancelFunc()
+		server.Serve(l)
+	}()
 }
 
 func routing(db db.DataBase, cfg Config) *mux.Router {

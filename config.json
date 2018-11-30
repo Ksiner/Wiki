@@ -1,0 +1,11 @@
+{
+	"Network": "tcp",
+	"Address": "localhost:8080",
+	"DBConfig": {
+		"DBConnStr": "mysql",
+		"DbDialect": "dbuser:Cgenybr_57@/wiki?charset=utf8&parseTime=True&loc=Local"
+	},
+	"UIConfig": {
+		"Assets": "/assets/"
+	}
+}

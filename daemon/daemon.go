@@ -1,7 +1,8 @@
 package daemon
 
 import (
-	"log"
+	"context"
+	"fmt"
 	"net"
 
 	"github.com/Ksiner/Wiki/ctrl/ui"
@@ -15,13 +16,14 @@ type Config struct {
 	UIConfig ui.Config
 }
 
-func Run(cfg Config) error {
+func Run(cfg *Config) (context.Context, error) {
 	db := db.NewMySql(cfg.DBConfig)
 	l, err := net.Listen(cfg.Network, cfg.Address)
 	if err != nil {
-		log.Panicf("Error in daemon! %v", err.Error())
-		return err
+		fmt.Printf("Error in daemon! %v", err.Error())
+		return nil, err
 	}
-	ui.Start(db, l, cfg.UIConfig)
-	return nil
+	context, cancelFunc := context.WithCancel(context.Background())
+	ui.Start(db, l, cfg.UIConfig, cancelFunc)
+	return context, nil
 }
