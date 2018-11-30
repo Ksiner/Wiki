@@ -102,15 +102,13 @@ func getArticle(db db.DataBase) http.Handler {
 
 func getPicture(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
-	picture, err := ioutil.ReadFile("/picture/" + vars["path"])
+	pictureBytes, err := ioutil.ReadFile("/picture/" + vars["path"])
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	if _, err = w.Write(picture); err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
+	picture := model.Picture{Pic: pictureBytes}
+	serialazeAndSend(w, picture)
 }
 
 func sendPicture(db db.DataBase) http.Handler {
@@ -119,16 +117,13 @@ func sendPicture(db db.DataBase) http.Handler {
 		if _, err := os.Stat("/picture/" + vars["path"]); err == nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 		}
-		picture, err := ioutil.ReadAll(r.Body)
-		if err != nil {
+		picture := model.Picture{}
+		deserialize(r, &picture)
+		if err := ioutil.WriteFile(vars["path"], picture.Pic, 0644); err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
-		if err := ioutil.WriteFile(vars["path"], picture, 0644); err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-		if err = db.UpdateArticlePic(vars["id"], vars["path"]); err != nil {
+		if err := db.UpdateArticlePic(vars["id"], vars["path"]); err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
