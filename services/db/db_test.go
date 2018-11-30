@@ -7,10 +7,9 @@ import (
 	"reflect"
 	"testing"
 
+	"github.com/Ksiner/Wiki/model"
 	"github.com/jinzhu/gorm"
 	"github.com/satori/go.uuid"
-
-	"github.com/ksiner/wiki/model"
 )
 
 type User struct {
@@ -111,7 +110,7 @@ func TestUpdateArticleJsutViews(t *testing.T) {
 	if err != nil {
 		t.Errorf("Error in getting tests config:%v", err.Error())
 	}
-	article := model.Article{ID: "2ec08c07-1c3e-41d4-9cb6-6ac4c204ee21", Pic: "some testing pic2", Header: "12312", Content: "some testing content12", Catid: "12312"}
+	article := model.Article{ID: "44c725d3-2a4c-436b-928d-d36d1addf265", Pic: "some testing pic2", Header: "12312", Content: "some testing content12", Catid: "12312"}
 	err = dbc.UpdateArticle(&article, true)
 	if err != nil {
 		t.Error(err.Error())
@@ -123,14 +122,14 @@ func TestUpdateArticleFully(t *testing.T) {
 	if err != nil {
 		t.Errorf("Error in getting tests config:%v", err.Error())
 	}
-	article := model.Article{ID: "2ec08c07-1c3e-41d4-9cb6-6ac4c204ee21", Pic: "some tesic2", Header: "112", Content: "some ntent12", Views: 1, Catid: "1"}
+	article := model.Article{ID: "44c725d3-2a4c-436b-928d-d36d1addf265", Pic: "some tesic2", Header: "112", Content: "some ntent12", Views: 1, Catid: "1"}
 	err = dbc.UpdateArticle(&article, false)
 	if err != nil {
 		t.Error(err.Error())
 	}
 }
 
-func getConfigs() (*DbConn, error) {
+func getConfigs() (*DbConnMysql, error) {
 	var cfg Config
 	byteCfg, err := ioutil.ReadFile("testingconf.json")
 	if err != nil {
@@ -142,5 +141,5 @@ func getConfigs() (*DbConn, error) {
 		fmt.Printf("Error in parsing tests config json file: %v", err.Error())
 		return nil, err
 	}
-	return &DbConn{Cfg: cfg}, nil
+	return &DbConnMysql{Cfg: cfg}, nil
 }
