@@ -35,7 +35,7 @@ func routing(db db.DataBase, cfg Config) *mux.Router {
 	r.Handle("/{category}/{id}", getArticlesByCatID(db))
 	r.Handle("/{category}/article/{id}", getArticle(db)).Methods("GET")
 	r.HandleFunc("/{category}/article/{path}", getPicture).Methods("GET")
-	r.Handle("/{category}/article/{path}", sendPicture(db)).Methods("POST")
+	r.Handle("/{category}/article/{id}/{path}", sendPicture(db)).Methods("POST")
 	r.Handle("/{category}/article", editArticle(db)).Methods("POST")
 	r.Handle("/{category}/article/create", createArticle(db))
 	r.Handle("/{category}/create", createCategory(db))
