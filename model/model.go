@@ -1,12 +1,12 @@
 package model
 
 type Article struct {
-	Pic     string
-	Header  string
-	Content string
-	ID      string
-	Catid   string
-	Views   int64 `gorm:"default:1"`
+	Pic     string `json:"pic"`
+	Header  string `json:"header"`
+	Content string `json:"content"`
+	ID      string `json:"id"`
+	Catid   string `json:"catid"`
+	Views   int64  `gorm:"default:1" json:"views"`
 }
 
 type Picture struct {
@@ -14,7 +14,7 @@ type Picture struct {
 }
 
 type Category struct {
-	ID       string
-	Parentid string
-	Name     string
+	ID       string `json:"id"`
+	Parentid string `json:"parentid"`
+	Name     string `json:"name"`
 }
