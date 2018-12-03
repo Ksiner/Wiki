@@ -13,6 +13,13 @@ type Picture struct {
 	Pic []byte `json:"pic"`
 }
 
+type CatTree struct {
+	Cat      *Category  `json:"category"`
+	Parent   *Category  `json:"parent"`
+	Childs   []*CatTree `json:"childs"`
+	Articles []*Article `json:"articles"`
+}
+
 type Category struct {
 	ID       string `json:"id"`
 	Parentid string `json:"parentid"`

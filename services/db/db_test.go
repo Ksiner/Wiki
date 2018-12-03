@@ -18,7 +18,7 @@ type User struct {
 }
 
 func TestSelectArticles(t *testing.T) {
-	dbc, err := getConfigs()
+	dbc, err := GetConfigs()
 	if err != nil {
 		t.Errorf("Error in getting tests config:%v", err.Error())
 	}
@@ -32,7 +32,7 @@ func TestSelectArticles(t *testing.T) {
 }
 
 func TestSelectArticleOnArticles(t *testing.T) {
-	dbc, err := getConfigs()
+	dbc, err := GetConfigs()
 	if err != nil {
 		t.Errorf("Error in getting tests config:%v", err.Error())
 	}
@@ -57,7 +57,7 @@ func TestSelectArticleOnArticles(t *testing.T) {
 }
 
 func TestSelectArticleNone(t *testing.T) {
-	dbc, err := getConfigs()
+	dbc, err := GetConfigs()
 	if err != nil {
 		t.Errorf("Error in getting tests config:%v", err.Error())
 	}
@@ -71,7 +71,7 @@ func TestSelectArticleNone(t *testing.T) {
 }
 
 func TestToInsertSomething(t *testing.T) {
-	dbc, err := getConfigs()
+	dbc, err := GetConfigs()
 	if err != nil {
 		t.Errorf("Error in getting tests config:%v", err.Error())
 	}
@@ -87,7 +87,7 @@ func TestToInsertSomething(t *testing.T) {
 }
 
 func TestInsertSimpleArticle(t *testing.T) {
-	dbc, err := getConfigs()
+	dbc, err := GetConfigs()
 	if err != nil {
 		t.Errorf("Error in getting tests config:%v", err.Error())
 	}
@@ -106,7 +106,7 @@ func TestInsertSimpleArticle(t *testing.T) {
 }
 
 func TestUpdateArticleJsutViews(t *testing.T) {
-	dbc, err := getConfigs()
+	dbc, err := GetConfigs()
 	if err != nil {
 		t.Errorf("Error in getting tests config:%v", err.Error())
 	}
@@ -118,7 +118,7 @@ func TestUpdateArticleJsutViews(t *testing.T) {
 }
 
 func TestUpdateArticleFully(t *testing.T) {
-	dbc, err := getConfigs()
+	dbc, err := GetConfigs()
 	if err != nil {
 		t.Errorf("Error in getting tests config:%v", err.Error())
 	}
@@ -129,7 +129,7 @@ func TestUpdateArticleFully(t *testing.T) {
 	}
 }
 
-func getConfigs() (*DbConnMysql, error) {
+func GetConfigs() (*DbConnMysql, error) {
 	var cfg Config
 	byteCfg, err := ioutil.ReadFile("testingconf.json")
 	if err != nil {

@@ -76,6 +76,23 @@ func (dbc *DbConnMysql) SelectArticle(artID string) (*model.Article, error) {
 	return article, nil
 }
 
+func (dbc *DbConnMysql) SelectCategories() ([]*model.Category, error) {
+	db, err := gorm.Open(dbc.Cfg.DbDialect, dbc.Cfg.DbConnStr)
+	if err != nil {
+		fmt.Printf("Error in \"db.SelectCategories\" OPEN DB: %v", err.Error())
+		return nil, err
+	}
+	defer db.Close()
+	cats := make([]*model.Category, 0)
+	db.Find(&cats)
+	if db.Error != nil {
+		fmt.Printf("Error in \"db.SelectCategories\" GET DATA: %v", err.Error())
+		err = db.Error
+		return nil, err
+	}
+	return cats, nil
+}
+
 func (dbc *DbConnMysql) InsertArticle(article *model.Article) error {
 	db, err := gorm.Open(dbc.Cfg.DbDialect, dbc.Cfg.DbConnStr)
 	if err != nil {
