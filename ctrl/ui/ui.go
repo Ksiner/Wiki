@@ -11,7 +11,7 @@ import (
 
 	"github.com/Ksiner/Wiki/model"
 	"github.com/Ksiner/Wiki/services/db"
-
+	"github.com/Ksiner/Wiki/services/tree"
 	"github.com/gorilla/mux"
 )
 
@@ -35,7 +35,7 @@ func Start(db db.DataBase, l net.Listener, cfg Config, cancelFunc context.Cancel
 func routing(db db.DataBase, cfg Config) *mux.Router {
 	r := mux.NewRouter()
 	r.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) { http.ServeFile(w, r, cfg.Assets+"index.html") })
-	r.Handle("/{filegroup:{?:css|scripts}}/{filename}", getFiles(cfg))
+	r.Handle("/{filegroup:(?:css|scripts)}/{filename}", getFiles(cfg))
 	r.Handle("/{category}/{id}", getArticlesByCatID(db))
 	r.Handle("/{category}/article/{id}", getArticle(db)).Methods("GET")
 	r.HandleFunc("/{category}/article/{path}", getPicture).Methods("GET")
@@ -44,7 +44,7 @@ func routing(db db.DataBase, cfg Config) *mux.Router {
 	r.Handle("/{category}/article/create", createArticle(db))
 	r.Handle("/{category}/create", createCategory(db))
 	r.Handle("/init", getArticles(db))
-
+	r.Handle("/catTree", getTree(db))
 	return r
 }
 
@@ -52,6 +52,21 @@ func getFiles(cfg Config) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		vars := mux.Vars(r)
 		http.ServeFile(w, r, cfg.Assets+vars["filegroup"]+"/"+vars["filename"])
+	})
+}
+
+func getTree(db db.DataBase) http.Handler{
+	return http.HandleFunc(func(w http.ResponseWriter,r *http.Request){
+		t,err:= tree.New(db)
+		if err!=nil{
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		err = serialazeAndSend(w,t)
+		f err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
 	})
 }
 
