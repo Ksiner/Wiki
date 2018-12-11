@@ -55,15 +55,15 @@ func getFiles(cfg Config) http.Handler {
 	})
 }
 
-func getTree(db db.DataBase) http.Handler{
-	return http.HandleFunc(func(w http.ResponseWriter,r *http.Request){
-		t,err:= tree.New(db)
-		if err!=nil{
+func getTree(db db.DataBase) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		t, err := tree.New(db)
+		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
-		err = serialazeAndSend(w,t)
-		f err != nil {
+		err = serialazeAndSend(w, t)
+		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
