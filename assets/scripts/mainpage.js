@@ -42,7 +42,9 @@ function getMainArticles() {
 
 function throughTree(level, JSONarray) {
   for (let i = 0; i < JSONarray.length; i += 1) {
+    
     //debugger;
+    
     var parentid = level == 0 ? "menu" : JSONarray[i]["category"].parentid;
     var currentid = JSONarray[i]["category"].id;
     addNewList(JSONarray[i]["category"].name, parentid, currentid);
@@ -50,8 +52,12 @@ function throughTree(level, JSONarray) {
     if (JSONarray[i].childs !== null) {
       throughTree(level + 1, JSONarray[i].childs);
     }
-    if (JSONarray[i].articles !== null) {
-      //addArticleOnList(level, catId, name);
+    else{
+      addButtons(currentid);
+    }
+    if (i===JSONarray.length-1)
+    {
+      addButtons(parentid);
     }
   }
 }
@@ -74,6 +80,7 @@ function addNewList(name, idParent, idChild) {
   Li.appendChild(elA);
   Li.appendChild(elementUL);
   dropdown.appendChild(Li);
+  
 }
 
 //TODO Добавить идентификатор для получения текста
@@ -99,6 +106,47 @@ function addArticleOnList(articles) {
   }
 }
 
+function addButtons(parentid){
+  var dropdown = document.getElementById(parentid);
+  var Li = document.createElement("li");
+  //var elA = document.createElement("a");
+  var catButton = document.createElement("button");
+  var artButton = document.createElement("button");
+  var articleForm = document.createElement("form");
+  var categoryForm = document.createElement("form");
+  var articleNameInput = document.createElement("input");
+  var CategoryNameInput = document.createElement("input");
+
+  articleNameInput.name = "art";
+  artButton.type="submit";
+  articleForm.appendChild(articleNameInput);
+  articleForm.appendChild(artButton);
+  articleForm.action="/"+parentid+"/article/create";
+
+  CategoryNameInput.name = "cat";
+  catButton.type="submit";
+  categoryForm.appendChild(CategoryNameInput);
+  categoryForm.appendChild(catButton);
+  categoryForm.action="/"+parentid+"/create";
+
+
+  Li.appendChild(categoryForm);
+  Li.appendChild(articleForm);
+  dropdown.appendChild(Li);
+}
+
+/*function addNewArticle(event){
+  let xmlhttp = new XMLHttpRequest();
+  xmlhttp.onreadystatechange = function () {
+    if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+      jsonresponse = JSON.parse(xmlhttp.responseText);
+      setArticles(jsonresponse);
+    }
+  };
+  xmlhttp.open("POST", server + "/catTree", true);
+  xmlhttp.send();
+}*/
+
 function requestArticle(event) {
   articleId = event.target.parentElement.id;
   categoryId = event.target.parentElement.parentElement.id;
@@ -123,7 +171,6 @@ function setArticles(JSONarticles) {
     elements[i].children[2].innerText = JSONarticles[counter].content.substring(0,3)+"...";
     counter++;
   }
-
 }
 getTree();
 getMainArticles();
