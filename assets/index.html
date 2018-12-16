@@ -37,7 +37,7 @@
   <div class="container">
       <ul  class="nav navbar-nav" >
           <div class="dropdown margin">
-              <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">Tutorials
+              <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" disabled>Tutorials
               <span class="caret"></span></button>
               <ul id="menu" class="dropdown-menu">
                   <li style="display: none;">
@@ -84,14 +84,14 @@
       </div>
     </div>
     <div class="col-sm-4">
-      <div class="panel panel-danger">
+      <div class="panel panel-primary">
         <div class="panel-heading">BLACK FRIDAY DEAL</div>
         <div class="panel-body"><img src="https://placehold.it/150x80?text=IMAGE" class="img-responsive" style="width:100%" alt="Image"></div>
         <div class="panel-footer">Buy 50 mobiles and get a gift card</div>
       </div>
     </div>
     <div class="col-sm-4">
-      <div class="panel panel-success">
+      <div class="panel panel-primary">
         <div class="panel-heading">BLACK FRIDAY DEAL</div>
         <div class="panel-body"><img src="https://placehold.it/150x80?text=IMAGE" class="img-responsive" style="width:100%" alt="Image"></div>
         <div class="panel-footer">Buy 50 mobiles and get a gift card</div>
@@ -132,14 +132,6 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <script src="scripts/mainpage.js"></script>
-<script>
-    $(document).ready(function(){
-      $('.dropdown a.test').on("click", function(e){
-        $(this).next('ul').toggle();
-        e.stopPropagation();
-        e.preventDefault();
-      });
-    });
-    </script>
+
 </body>
 </html>
