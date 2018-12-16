@@ -9,6 +9,11 @@
     padding: 0;
 }
 
+.addition-form{
+    display: flex;
+    margin: 2px;
+}
+
 .search-group{
     position: absolute;
     display: flex;
