@@ -25,3 +25,9 @@ type Category struct {
 	Parentid string `json:"parentid"`
 	Name     string `json:"name"`
 }
+
+type User struct {
+	Login string `json:"login"`
+	Pass  string `json:"pass"`
+	Email string `json:"email"`
+}
