@@ -11,4 +11,7 @@ type DataBase interface {
 	UpdateArticle(*model.Article, bool) error
 	InsertArticle(*model.Article) error
 	InsertCategory(*model.Category) error
+	AuthUser(*model.User) (*model.Token, error)
+	LogOutUser(*model.Token) error
+	RegisterUser(*model.User) (*model.Token, error)
 }

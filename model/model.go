@@ -27,7 +27,20 @@ type Category struct {
 }
 
 type User struct {
+	ID    string `json:"id"`
 	Login string `json:"login"`
 	Pass  string `json:"pass"`
 	Email string `json:"email"`
+}
+
+type Token struct {
+	Token string `json:"token"`
+}
+
+type BufferArt struct {
+	Art string `json:"art"`
+}
+
+type BufferCat struct {
+	Cat string `json:"cat"`
 }

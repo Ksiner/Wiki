@@ -1,6 +1,7 @@
 package db
 
 import (
+	"errors"
 	"fmt"
 
 	uuid "github.com/satori/go.uuid"
@@ -170,4 +171,69 @@ func (dbc *DbConnMysql) UpdateArticlePic(artID string, path string) error {
 		return err
 	}
 	return nil
+}
+
+func (dbc *DbConnMysql) AuthUser(user *model.User) (*model.Token, error) {
+	db, err := gorm.Open(dbc.Cfg.DbDialect, dbc.Cfg.DbConnStr)
+	if err != nil {
+		fmt.Printf("Error in \"db.AuthUser\" OPEN DB: %v", err.Error())
+		return nil, err
+	}
+	defer db.Close()
+	userCheck := model.User{}
+	db.Where("(login = ? or email = ?) and pass = ?", user.Login, user.Email, user.Pass).First(&userCheck)
+	if userCheck.ID == "" {
+		return nil, errors.New(user.Login + " no such user!")
+	}
+	token := model.Token{Token: uuid.Must(uuid.NewV4()).String()}
+	db.Save(&token)
+	if db.Error != nil {
+		err = db.Error
+		db.Error = nil
+		fmt.Printf("Error in \"db.AuthUser\" INSERT AUTH TOKEN: %v", err.Error())
+		return nil, err
+	}
+	return &token, nil
+}
+
+func (dbc *DbConnMysql) LogOutUser(token *model.Token) error {
+	db, err := gorm.Open(dbc.Cfg.DbDialect, dbc.Cfg.DbConnStr)
+	if err != nil {
+		fmt.Printf("Error in \"db.LogOutUser\" OPEN DB: %v", err.Error())
+		return err
+	}
+	defer db.Close()
+	db.Delete(&token)
+	if db.Error != nil {
+		err = db.Error
+		db.Error = nil
+		fmt.Printf("Error in \"db.LogOutUser\" DELETE AUTH TOKEN: %v", err.Error())
+		return err
+	}
+	return nil
+}
+
+func (dbc *DbConnMysql) RegisterUser(user *model.User) (*model.Token, error) {
+	db, err := gorm.Open(dbc.Cfg.DbDialect, dbc.Cfg.DbConnStr)
+	if err != nil {
+		fmt.Printf("Error in \"db.LogOutUser\" OPEN DB: %v", err.Error())
+		return nil, err
+	}
+	defer db.Close()
+	db.Save(&user)
+	if db.Error != nil {
+		err = db.Error
+		db.Error = nil
+		fmt.Printf("Error in \"db.RegisterUser\" INSERT USER: %v", err.Error())
+		return nil, err
+	}
+	token := model.Token{Token: uuid.Must(uuid.NewV4()).String()}
+	db.Save(&token)
+	if db.Error != nil {
+		err = db.Error
+		db.Error = nil
+		fmt.Printf("Error in \"db.RegisterUser\" INSERT AUTH TOKEN: %v", err.Error())
+		return nil, err
+	}
+	return &token, nil
 }

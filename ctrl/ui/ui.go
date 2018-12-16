@@ -46,6 +46,9 @@ func routing(db db.DataBase, cfg Config) *mux.Router {
 	r.Handle("/{category}/create", createCategory(db))
 	r.Handle("/init", getArticles(db))
 	r.Handle("/catTree", getTree(db))
+	r.Handle("/login", loginUser(db))
+	r.Handle("/logout", loginUser(db))
+	r.Handle("/reg", register(db))
 	return r
 }
 
@@ -53,6 +56,60 @@ func getFiles(cfg Config) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		vars := mux.Vars(r)
 		http.ServeFile(w, r, cfg.Assets+vars["filegroup"]+"/"+vars["filename"])
+	})
+}
+
+func loginUser(db db.DataBase) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		user := model.User{}
+		err := deserialize(r, &user)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		token, err := db.AuthUser(&user)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		if err := serialazeAndSend(w, token); err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+	})
+}
+
+func logOutUser(db db.DataBase) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		token := model.Token{}
+		err := deserialize(r, &token)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		if err := db.LogOutUser(&token); err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+	})
+}
+
+func register(db db.DataBase) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		user := model.User{}
+		if err := deserialize(r, &user); err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		token, err := db.RegisterUser(&user)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		if err := serialazeAndSend(w, token); err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
 	})
 }
 
@@ -168,18 +225,22 @@ func editArticle(db db.DataBase) http.Handler {
 
 func createArticle(db db.DataBase) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		vars := mux.Vars(r)
 		article := model.Article{}
-		err := deserialize(r, &article)
+		bufferObj := model.BufferArt{}
+		err := deserialize(r, &bufferObj)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
+		article.Header = bufferObj.Art
+		article.Catid = vars["category"]
 		err = db.InsertArticle(&article)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
-		if _, err := w.Write([]byte(article.ID)); err != nil {
+		if err := serialazeAndSend(w, article); err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
@@ -188,17 +249,24 @@ func createArticle(db db.DataBase) http.Handler {
 
 func createCategory(db db.DataBase) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		vars := mux.Vars(r)
 		category := model.Category{}
-		err := deserialize(r, &category)
+		bufferObj := model.BufferCat{}
+		err := deserialize(r, &bufferObj)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
+		}
+		category.Name = bufferObj.Cat
+		if vars["category"] != "null" {
+			category.Parentid = vars["category"]
 		}
 		err = db.InsertCategory(&category)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
+
 	})
 }
 
