@@ -6,9 +6,22 @@
 }
 
 .search-group{
+    position: absolute;
     display: flex;
     justify-content: center;
     align-items: center;
+    width: 50%;
+    top: 38%;
+    left: 61%;
+    /* float: left; */
+    max-width: 700px;
+    transform: translate(-50%,-50%);
+}
+
+.login-form{
+    position: absolute;
+    right: 21%;
+    display: flex;
 }
 
 .margin{
