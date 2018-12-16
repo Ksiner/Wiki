@@ -1,6 +1,6 @@
 var server = "http://localhost:8080";
-jsSHA = require("jssha");
-var shaObj = new jsSHA("SHA-512", "TEXT");
+/*jsSHA = require("jssha");
+var shaObj = new jsSHA("SHA-512", "TEXT");*/
 var jsonresponse
 var temp = ""
 
@@ -19,21 +19,22 @@ function getMain() {
 }
 
 function throughTree(level, JSONarray) {
-  for (i = 0; i < JSONarray.length; i += 1) {
-    addNewList(level, JSONarray[i]["category"].name, level=0?"menu":JSONarray[i]["category"].id);
-
-    if (!(JSONarray[i].childs === null)) {
-      for (g = 0; g < JSONarray[i].childs.length; g += 1)
+  for (let i = 0; i < JSONarray.length; i += 1) {
+    var parentid = level==0?"menu":JSONarray[i]["category"].parentid;
+    var currentid= JSONarray[i]["category"].id;
+    addNewList( JSONarray[i]["category"].name, parentid,currentid);
+    
+    if (JSONarray[i].childs !== null) {
         throughTree(level + 1, JSONarray[i].childs);
     }
-    if (!(JSONarray[i].articles === null)) {
-      addArticleOnList(level, catId, name);
+    if (JSONarray[i].articles !== null) {
+      //addArticleOnList(level, catId, name);
     }
   }
 }
 
-function addNewList(level, name, id) {
-  var dropdown = document.getElementById(id);
+function addNewList(name, idParent,idChild) {
+  var dropdown = document.getElementById(idParent);
   var Li = document.createElement("li");
   var elA = document.createElement("a");
   var elSpan = document.createElement("span");
@@ -44,7 +45,7 @@ function addNewList(level, name, id) {
   elA.classList.add("test");
   elA.textContent = name;
   elementUL.classList.add("dropdown-menu");
-  elementUL.id = id;
+  elementUL.id = idChild;
   elA.appendChild(elSpan);
   Li.appendChild(elA);
   Li.appendChild(elementUL);

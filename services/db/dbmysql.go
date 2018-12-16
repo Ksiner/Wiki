@@ -3,7 +3,7 @@ package db
 import (
 	"fmt"
 
-	"github.com/satori/go.uuid"
+	uuid "github.com/satori/go.uuid"
 
 	"github.com/Ksiner/Wiki/model"
 	"github.com/jinzhu/gorm"
@@ -170,8 +170,4 @@ func (dbc *DbConnMysql) UpdateArticlePic(artID string, path string) error {
 		return err
 	}
 	return nil
-}
-
-func (dbc *DbConnMysql) FindUser(user model.User) (error, bool) {
-
 }
