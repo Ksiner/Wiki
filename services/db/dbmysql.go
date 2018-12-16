@@ -171,3 +171,7 @@ func (dbc *DbConnMysql) UpdateArticlePic(artID string, path string) error {
 	}
 	return nil
 }
+
+func (dbc *DbConnMysql) FindUser(user ) (error, bool){
+
+}
