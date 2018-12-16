@@ -35,6 +35,7 @@ func Start(db db.DataBase, l net.Listener, cfg Config, cancelFunc context.Cancel
 func routing(db db.DataBase, cfg Config) *mux.Router {
 	r := mux.NewRouter()
 	r.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) { http.ServeFile(w, r, cfg.Assets+"index.html") })
+	r.HandleFunc("/favicon.ico", func(w http.ResponseWriter, r *http.Request) { http.ServeFile(w, r, cfg.Assets+"favicon.ico") })
 	r.Handle("/{filegroup:(?:css|scripts)}/{filename}", getFiles(cfg))
 	r.Handle("/{category}/{id}", getArticlesByCatID(db))
 	r.Handle("/{category}/article/{id}", getArticle(db)).Methods("GET")
