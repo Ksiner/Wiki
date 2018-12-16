@@ -8,10 +8,11 @@ function getMain() {
   let xmlhttp = new XMLHttpRequest();
   xmlhttp.onreadystatechange = function () {
     if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-      alert(xmlhttp.responseText);
+      //alert(xmlhttp.responseText);
       jsonresponse = JSON.parse(xmlhttp.responseText);
       //addNewList(1,"addedByJS");
       throughTree(0, jsonresponse);
+      //addNewList("test1","menu1","menu2")
     }
   };
   xmlhttp.open("GET", server + "/catTree", true);
@@ -20,6 +21,7 @@ function getMain() {
 
 function throughTree(level, JSONarray) {
   for (let i = 0; i < JSONarray.length; i += 1) {
+    //debugger;
     var parentid = level==0?"menu":JSONarray[i]["category"].parentid;
     var currentid= JSONarray[i]["category"].id;
     addNewList( JSONarray[i]["category"].name, parentid,currentid);
@@ -50,6 +52,25 @@ function addNewList(name, idParent,idChild) {
   Li.appendChild(elA);
   Li.appendChild(elementUL);
   dropdown.appendChild(Li);
+  
+  //debugger;
+  /*dropdown = document.getElementById("menu1")
+  var Li = document.createElement("li");
+  var elA = document.createElement("a");
+  var elSpan = document.createElement("span");
+  var elementUL = document.createElement("ul");
+  elSpan.classList.add("caret");
+  elA.href = "#";
+  elA.tabIndex = "-1";
+  elA.classList.add("test");
+  elA.textContent = name;
+  elementUL.classList.add("dropdown-menu");
+  elementUL.id = idChild;
+  elA.appendChild(elSpan);
+  Li.appendChild(elA);
+  Li.appendChild(elementUL);
+  dropdown.appendChild(Li);*/
+
 }
 
 //TODO Добавить идентификатор для получения текста
@@ -57,4 +78,5 @@ function addArticleOnList(level, catName, name) {
 
 }
 getMain();
+//addNewList("test1","fghj","fghj")
 //addNewList(2,"addedByJS");
