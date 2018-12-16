@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <title>База знаний</title>
   <meta charset="utf-8">
@@ -25,36 +26,37 @@
     }
   </style>
 </head>
+
 <body>
   <div class="container">
     <div>
       <form class="login-form">
-        <input type="text" class="form-control margin" placeholder="Логин"/>
-        <input type="password" class="form-control margin" placeholder="Пароль"/>
-        <input type="submit" value="Войти" class="btn margin"/>
+        <input type="text" class="form-control margin" placeholder="Логин" />
+        <input type="password" class="form-control margin" placeholder="Пароль" />
+        <input type="submit" value="Войти" class="btn margin" id = "entrebtn"/>
         <button class="btn margin">Регистрация</button>
       </form>
     </div>
     <div class="jumbotron">
-    <h1>База знаний</h1>
-    <p>Всё что нужно знать о самых популярных научно-фантастических вселенных</p>
+      <h1>База знаний</h1>
+      <p>Всё что нужно знать о самых популярных научно-фантастических вселенных</p>
+    </div>
   </div>
-</div>
 
-<nav class="navbar navbar-inverse justify-content-center">
-  <div class="container">
-      <ul  class="nav navbar-nav" >
-          <div class="dropdown margin">
-              <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" disabled>Tutorials
-              <span class="caret"></span></button>
-              <ul id="menu" class="dropdown-menu">
-                  <li style="display: none;">
-                      <a class="test" tabindex="-1" href="#">New dropdown <span class="caret"></span></a>
-                      <ul id="me" class="dropdown-menu">
-                      </ul>
-                  </li>
+  <nav class="navbar navbar-inverse justify-content-center">
+    <div class="container">
+      <ul class="nav navbar-nav">
+        <div class="dropdown margin">
+          <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" disabled>Tutorials
+            <span class="caret"></span></button>
+          <ul id="menu" class="dropdown-menu">
+            <li style="display: none;">
+              <a class="test" tabindex="-1" href="#">New dropdown <span class="caret"></span></a>
+              <ul id="me" class="dropdown-menu">
               </ul>
-                <!-- <li><a tabindex="-1" href="#">HTML</a></li>
+            </li>
+          </ul>
+          <!-- <li><a tabindex="-1" href="#">HTML</a></li>
                 <li><a tabindex="-1" href="#">CSS</a></li>
                 <li>
                   <a class="test" tabindex="-1" href="#">New dropdown <span class="caret"></span></a>
@@ -66,80 +68,90 @@
                     </li>
                   </ul>
                 </li> -->
-              </ul>
-            </div>
       </ul>
-      <ul class="nav navbar-nav navbar-right">
-          <div class="input-group search-group margin col-md-9">
-              <input class="form-control py-2 border-right-0 border" type="search" value="search" id="example-search-input">
-              <span class="input-group-append">
-                  <button class="btn btn-search btn-outline-secondary border-left-0 border" type="button">
-                      <i class="fa fa-search"></i>
-                  </button>
-                </span>
-          </div>
-      </ul>
-  </div>
-</nav>
+    </div>
+    </ul>
+    <ul class="nav navbar-nav navbar-right">
+      <div class="input-group search-group margin col-md-9">
+        <input class="form-control py-2 border-right-0 border" type="search" placeholder="search" id="example-search-input">
+        <span class="input-group-append">
+          <button class="btn btn-search btn-outline-secondary border-left-0 border" type="button">
+            <i class="fa fa-search"></i>
+          </button>
+        </span>
+      </div>
+    </ul>
+    </div>
+  </nav>
 
-<div class="container">
-  <div class="row">
-    <div class="col-sm-4">
-      <div class="panel panel-primary">
-        <div class="panel-heading">BLACK FRIDAY DEAL</div>
-        <div class="panel-body"><img src="https://placehold.it/150x80?text=IMAGE" class="img-responsive" style="width:100%" alt="Image"></div>
-        <div class="panel-footer">Buy 50 mobiles and get a gift card</div>
-      </div>
-    </div>
-    <div class="col-sm-4">
-      <div class="panel panel-primary">
-        <div class="panel-heading">BLACK FRIDAY DEAL</div>
-        <div class="panel-body"><img src="https://placehold.it/150x80?text=IMAGE" class="img-responsive" style="width:100%" alt="Image"></div>
-        <div class="panel-footer">Buy 50 mobiles and get a gift card</div>
-      </div>
-    </div>
-    <div class="col-sm-4">
-      <div class="panel panel-primary">
-        <div class="panel-heading">BLACK FRIDAY DEAL</div>
-        <div class="panel-body"><img src="https://placehold.it/150x80?text=IMAGE" class="img-responsive" style="width:100%" alt="Image"></div>
-        <div class="panel-footer">Buy 50 mobiles and get a gift card</div>
-      </div>
-    </div>
-  </div>
-</div><br>
+  <div class="container" id = "allArticles">
 
-<div class="container">
-  <div class="row">
     <div class="col-sm-4">
       <div class="panel panel-primary">
         <div class="panel-heading">BLACK FRIDAY DEAL</div>
-        <div class="panel-body"><img src="https://placehold.it/150x80?text=IMAGE" class="img-responsive" style="width:100%" alt="Image"></div>
+        <div class="panel-body"><img src="https://placehold.it/150x80?text=IMAGE" class="img-responsive" style="width:100%"
+            alt="Image"></div>
         <div class="panel-footer">Buy 50 mobiles and get a gift card</div>
       </div>
     </div>
-    <div class="col-sm-4">
+    <div class="col-sm-4 ">
       <div class="panel panel-primary">
         <div class="panel-heading">BLACK FRIDAY DEAL</div>
-        <div class="panel-body"><img src="https://placehold.it/150x80?text=IMAGE" class="img-responsive" style="width:100%" alt="Image"></div>
+        <div class="panel-body"><img src="https://placehold.it/150x80?text=IMAGE" class="img-responsive" style="width:100%"
+            alt="Image"></div>
         <div class="panel-footer">Buy 50 mobiles and get a gift card</div>
       </div>
     </div>
-    <div class="col-sm-4">
+    <div class="col-sm-4 ">
       <div class="panel panel-primary">
         <div class="panel-heading">BLACK FRIDAY DEAL</div>
-        <div class="panel-body"><img src="https://placehold.it/150x80?text=IMAGE" class="img-responsive" style="width:100%" alt="Image"></div>
+        <div class="panel-body"><img src="https://placehold.it/150x80?text=IMAGE" class="img-responsive" style="width:100%"
+            alt="Image"></div>
         <div class="panel-footer">Buy 50 mobiles and get a gift card</div>
       </div>
     </div>
-  </div>
-</div><br><br>
 
-<footer class="container-fluid text-center">
-</footer>
-<ul id = 'TempTest'></ul>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-<script src="scripts/mainpage.js"></script>
+    <div class="col-sm-4 ">
+      <div class="panel panel-primary">
+        <div class="panel-heading">BLACK FRIDAY DEAL</div>
+        <div class="panel-body"><img src="https://placehold.it/150x80?text=IMAGE" class="img-responsive" style="width:100%"
+            alt="Image"></div>
+        <div class="panel-footer">Buy 50 mobiles and get a gift card</div>
+      </div>
+    </div>
+    <div class="col-sm-4 ">
+      <div class="panel panel-primary">
+        <div class="panel-heading">BLACK FRIDAY DEAL</div>
+        <div class="panel-body"><img src="https://placehold.it/150x80?text=IMAGE" class="img-responsive" style="width:100%"
+            alt="Image"></div>
+        <div class="panel-footer">Buy 50 mobiles and get a gift card</div>
+      </div>
+    </div>
+    <div class="col-sm-4 ">
+      <div class="panel panel-primary">
+        <div class="panel-heading">BLACK FRIDAY DEAL</div>
+        <div class="panel-body"><img src="https://placehold.it/150x80?text=IMAGE" class="img-responsive" style="width:100%"
+            alt="Image"></div>
+        <div class="panel-footer">Buy 50 mobiles and get a gift card</div>
+      </div>
+    </div>
+    <div class="col-sm-4 ">
+      <div class="panel panel-primary">
+        <div class="panel-heading">BLACK FRIDAY DEAL</div>
+        <div class="panel-body"><img src="https://placehold.it/150x80?text=IMAGE" class="img-responsive" style="width:100%"
+            alt="Image"></div>
+        <div class="panel-footer">Buy 50 mobiles and get a gift card</div>
+      </div>
+    </div>
+  </div><br><br>
+
+  <footer class="container-fluid text-center">
+  </footer>
+  <ul id='TempTest'></ul>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <script src="scripts/mainpage.js"></script>
 
 </body>
+
 </html>

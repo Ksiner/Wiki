@@ -27,3 +27,7 @@
 .margin{
     margin:5px;
 }
+
+.container > .col-sm-4{
+    display:flow-root
+}
