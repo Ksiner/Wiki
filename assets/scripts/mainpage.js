@@ -48,6 +48,7 @@ function throughTree(level, JSONarray) {
     addNewList(JSONarray[i]["category"].name, parentid, currentid);
     addArticleOnList(JSONarray[i].articles);
     if (JSONarray[i].childs !== null) {
+      addButtons(parentid);
       throughTree(level + 1, JSONarray[i].childs);
     }
     if (JSONarray[i].articles !== null) {
@@ -74,6 +75,7 @@ function addNewList(name, idParent, idChild) {
   Li.appendChild(elA);
   Li.appendChild(elementUL);
   dropdown.appendChild(Li);
+  
 }
 
 //TODO Добавить идентификатор для получения текста
@@ -97,6 +99,22 @@ function addArticleOnList(articles) {
     Li.appendChild(elA);
     dropdown.appendChild(Li);
   }
+}
+
+function addButtons(parentid){
+  var dropdown = document.getElementById(parentid);
+  var Li = document.createElement("li");
+  //var elA = document.createElement("a");
+  var catButton = document.createElement("button");
+  var artButton = document.createElement("button");
+  catButton.innerText = "Добавить категорию";
+  artButton.innerText = "Добавить статью";
+  //catButton.classList.add("dropdown-item");
+  catButton.classList.add("btn");
+  artButton.classList.add("btn");
+  Li.appendChild(catButton);
+  Li.appendChild(artButton);
+  dropdown.appendChild(Li);
 }
 
 function requestArticle(event) {
@@ -123,7 +141,6 @@ function setArticles(JSONarticles) {
     elements[i].children[2].innerText = JSONarticles[counter].content.substring(0,3)+"...";
     counter++;
   }
-
 }
 getTree();
 getMainArticles();
