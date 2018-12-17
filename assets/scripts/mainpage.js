@@ -2,6 +2,7 @@ var server = "http://localhost:8080";
 /*jsSHA = require("jssha");
 var shaObj = new jsSHA("SHA-512", "TEXT");*/
 var jsonresponse
+
 var allarticles
 var temp = ""
 //jsSHA = require("jssha");
@@ -196,7 +197,6 @@ function goToArticle(event) { //ПЕРЕХОД НА СТРАНИЦУ СО СТА
   xmlhttp.open("GET", server + "/" + categoryId + "/article/" + articleId, true);
   xmlhttp.send();
 }
-//TODO Переделать под allarticles
 function setArticles() { //Занести статьи на главную страницу
   /*counter = 0
   elements = document.querySelectorAll(".col-sm-4 .panel.panel-primary");
@@ -242,22 +242,6 @@ function addArticleInPage(article){
     main.appendChild(column);
 }
 
-function searchForText(event) { //Поиск по всем статьям 
-  let xmlhttp = new XMLHttpRequest();
-  xmlhttp.onreadystatechange = function () {
-    if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-      JSONarticles = JSON.parse(xmlhttp.responseText);
-      for (i = 0; i < JSONarticles.length; i++) {
-        if (JSONarticles[i].content.includes(event.target.parentElement.parentElement.children[0].value)) {
-          alert("Name  = " + JSONarticles[i].header + " content = " + JSONarticles[i].content)
-        }
-      }
-    }
-  };
-  xmlhttp.open("GET", server + "/init", true);
-  xmlhttp.send();
-}
-
 function searchOnInput(event){
   main = document.getElementById("allArticles");
   main.innerText="";
@@ -270,9 +254,15 @@ function searchOnInput(event){
   }
 }
 
-function login(){//Вставить Хеширование
+function login(event){//Вставить Хеширование
   log = document.getElementById("log");
   pswd = document.getElementById("pswd");
+  let hasher = new jsSHA("SHA-512", "TEXT");
+  hasher.update(log.value);
+  let hashLog = hasher.getHash("B64");
+  hasher = new jsSHA("SHA-512", "TEXT");
+  hasher.update(pswd.value);
+  let hashpass = hasher.getHash("B64");
   let xmlhttp = new XMLHttpRequest();
   xmlhttp.onreadystatechange = function () {
     if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
@@ -286,13 +276,42 @@ function login(){//Вставить Хеширование
   }
   xmlhttp.open("POST", server + "/login", true);
   xmlhttp.send(JSON.stringify({
-    login: log.value,
-    pass: pswd.value
+    login: hashLog,
+    pass: hashpass
+  }));
+}
+
+function registration(event){
+  log = document.getElementById("log");
+  pswd = document.getElementById("pswd");
+  let hasher = new jsSHA("SHA-512", "TEXT");
+  hasher.update(log.value);
+  let hashLog = hasher.getHash("B64");
+  hasher = new jsSHA("SHA-512", "TEXT");
+  hasher.update(pswd.value);
+  let hashpass = hasher.getHash("B64");
+  let xmlhttp = new XMLHttpRequest();
+  xmlhttp.onreadystatechange = function () {
+    if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+      jsonobj = JSON.parse(xmlhttp.responseText);
+      localStorage.setItem("tokenArticles",jsonobj[0]);
+    }
+    else
+    {
+      alert ("Невозможно регистрация такого пользователя");
+    }
+  }
+  xmlhttp.open("POST", server + "/reg", true);
+  xmlhttp.send(JSON.stringify({
+    login: hashLog,
+    pass: hashpass
   }));
 }
 element = document.getElementById("example-search-input")
 element.oninput = searchOnInput;
 element = document.querySelector("#entrebtn");
 element.onclick = login;
+element = document.querySelector("#regisbtn");
+element.onclick=registration;
 getTree();
 getMainArticles();

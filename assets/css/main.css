@@ -37,11 +37,6 @@
     margin:5px;
 }
 
-<<<<<<< HEAD
-.container > .col-sm-4{
-    display:flow-root
-}
-=======
 
 .art-container{
     display: flex;
@@ -93,4 +88,3 @@
         width: 900px;;
     }
 }
->>>>>>> ddfb9abaedeb4280936bc4c9a29e24581ccd6d7f
