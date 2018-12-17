@@ -119,6 +119,7 @@ func (dbc *DbConnMysql) InsertCategory(category *model.Category) error {
 		return err
 	}
 	defer db.Close()
+	category.ID = uuid.Must(uuid.NewV4()).String()
 	db.Save(category)
 	if db.Error != nil {
 		fmt.Printf("Error in \"db.InsertCategory\" INSERT DB: %v", err.Error())
@@ -173,6 +174,44 @@ func (dbc *DbConnMysql) UpdateArticlePic(artID string, path string) error {
 	return nil
 }
 
+func (dbc *DbConnMysql) AddToken(token *model.Token) error {
+	db, err := gorm.Open(dbc.Cfg.DbDialect, dbc.Cfg.DbConnStr)
+	if err != nil {
+		fmt.Printf("Error in \"db.AddToken\" OPEN DB: %v", err.Error())
+		return err
+	}
+	defer db.Close()
+	db.Save(&token)
+	if db.Error != nil {
+		err = db.Error
+		db.Error = nil
+		fmt.Printf("Error in \"db.AddToken\" INSERT AUTH TOKEN: %v", err.Error())
+		return err
+	}
+	return nil
+}
+
+func (dbc *DbConnMysql) CheckToken(token *model.Token) error {
+	db, err := gorm.Open(dbc.Cfg.DbDialect, dbc.Cfg.DbConnStr)
+	if err != nil {
+		fmt.Printf("Error in \"db.CheckToken\" OPEN DB: %v", err.Error())
+		return err
+	}
+	defer db.Close()
+	checkToken := model.Token{}
+	db.Where("token=?", token.Token).First(&checkToken)
+	if db.Error != nil {
+		err = db.Error
+		db.Error = nil
+		fmt.Printf("Error in \"db.CheckToken\" INSERT AUTH TOKEN: %v", err.Error())
+		return err
+	}
+	if checkToken.Token == "" {
+		return errors.New("No such token!")
+	}
+	return nil
+}
+
 func (dbc *DbConnMysql) AuthUser(user *model.User) (*model.Token, error) {
 	db, err := gorm.Open(dbc.Cfg.DbDialect, dbc.Cfg.DbConnStr)
 	if err != nil {
@@ -220,6 +259,7 @@ func (dbc *DbConnMysql) RegisterUser(user *model.User) (*model.Token, error) {
 		return nil, err
 	}
 	defer db.Close()
+	user.ID = uuid.Must(uuid.NewV4()).String()
 	db.Save(&user)
 	if db.Error != nil {
 		err = db.Error
