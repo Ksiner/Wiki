@@ -47,7 +47,7 @@ func routing(db db.DataBase, cfg Config) *mux.Router {
 	r.Handle("/init", getArticles(db))
 	r.Handle("/catTree", getTree(db))
 	r.Handle("/login", loginUser(db))
-	r.Handle("/logout", loginUser(db))
+	r.Handle("/logout", logOutUser(db))
 	r.Handle("/reg", register(db))
 	return r
 }
@@ -61,6 +61,13 @@ func getFiles(cfg Config) http.Handler {
 
 func loginUser(db db.DataBase) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if t := r.FormValue("token"); t != "" {
+			if err := db.AddToken(&model.Token{Token: t}); err != nil {
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+				return
+			}
+			return
+		}
 		user := model.User{}
 		err := deserialize(r, &user)
 		if err != nil {

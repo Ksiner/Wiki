@@ -14,4 +14,6 @@ type DataBase interface {
 	AuthUser(*model.User) (*model.Token, error)
 	LogOutUser(*model.Token) error
 	RegisterUser(*model.User) (*model.Token, error)
+	AddToken(*model.Token) error
+	CheckToken(*model.Token) error
 }
