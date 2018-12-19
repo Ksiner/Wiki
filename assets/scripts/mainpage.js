@@ -267,8 +267,10 @@ function articlePage(article) {
   let content = document.getElementById("constContent").querySelector(".art-container_cont-text")
   content.innerText = article.content;
   let image = articlePage.querySelector(".art-container_cont-image");
-  if (article.picture !== null)
+  if (article.picture !== null && article.picture !== "" && article.picture !== undefined)
     image.src = getPictureSrc(article.picture);
+    else
+    image.src = "";
   let hiddenContent = document.getElementById("Content").querySelector(".art-container_cont-text");
   hiddenContent.innerText = article.content;
   let hiddenHeader = document.getElementById("Header");
@@ -529,9 +531,7 @@ function saveArticle(event) {
 }
 
 function getPictureBytes(string){
-  string = string.substring("data:image/jpeg;base64,".length);
-  let res = strToCharCode(string);
-  return res;
+  return string.substring("data:image/jpeg;base64,".length);
 }
 
 //Проверка 
@@ -623,6 +623,7 @@ element = document.querySelector("#back");
 element.onclick = back;
 element = document.querySelector("#vk");
 element.onclick = VKRegistration;
+window.onbeforeunload = exit;
 
 var control = document.getElementById("file");
 control.addEventListener("change", function (event) {
@@ -633,7 +634,7 @@ control.addEventListener("change", function (event) {
   reader.readAsDataURL(file);
 }, false);
 
-window.onbeforeunload = exit;
+
 getTree();
 getMainArticles();
 response = VK.Auth.getLoginStatus(function (response) {
