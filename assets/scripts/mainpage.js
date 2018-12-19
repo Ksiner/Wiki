@@ -267,7 +267,7 @@ function articlePage(article) {
   let content = document.getElementById("constContent").querySelector(".art-container_cont-text")
   content.innerText = article.content;
   let image = articlePage.querySelector(".art-container_cont-image");
-  if (article.picture!==null || article.picture!=="" || article.picture!==undefined)
+  if (article.picture!==null && article.picture!=="" && article.picture!==undefined)
     image.src = getPictureSrc(article.picture);
   let hiddenContent = document.getElementById("Content").querySelector(".art-container_cont-text");
   hiddenContent.innerText = article.content;
@@ -277,7 +277,7 @@ function articlePage(article) {
 }
 
 function getPictureSrc(string){
-  let res = charToString(article.picture);
+  let res = charToString(string);
   res ="data:image/jpeg;base64,"+res;
   return res;
 }
@@ -325,7 +325,7 @@ function addArticleInPage(article) {
   myImg.alt = "Image";
   header.innerText = article.header;
   footer.innerText = article.content.substring(0, 25) + "...";
-  if (article.picture!==null || article.picture!=="" || article.picture!==undefined)
+  if (article.picture!==null && article.picture!=="" && article.picture!==undefined)
     myImg.src = getPictureSrc(article.picture);
   imgDiv.appendChild(myImg);
   panel.appendChild(header);
@@ -584,10 +584,10 @@ function strToCharCode(string) {
 }
 
 function charToString(array) {
-  result = new String();
+  result = [];
   for (let i = 0; i < array.length; i++) {
     result.push(String.fromCharCode(array[i]));
-  }
+  } 
   return result;
 }
 
