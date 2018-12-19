@@ -262,6 +262,8 @@ function articlePage(article) {
   if (document.getElementById("constHeader").classList.contains("hidden")) {
     changeArticle(null);
   }
+  let file = document.getElementById("file");
+  file.value="";
   let articlePage = document.getElementById("articlePage");
   document.getElementById("constHeader").textContent = article.header;
   let content = document.getElementById("constContent").querySelector(".art-container_cont-text")
@@ -626,7 +628,7 @@ element = document.querySelector("#back");
 element.onclick = back;
 element = document.querySelector("#vk");
 element.onclick = VKRegistration;
-//window.onbeforeunload = exit;
+window.onbeforeunload = exit;
 
 var control = document.getElementById("file");
 control.addEventListener("change", function (event) {
