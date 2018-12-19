@@ -267,13 +267,8 @@ function articlePage(article) {
   let content = document.getElementById("constContent").querySelector(".art-container_cont-text")
   content.innerText = article.content;
   let image = articlePage.querySelector(".art-container_cont-image");
-<<<<<<< HEAD
-  if(article.picture!==null || article.picture!=="" || article.picture!==undefined)
-    image.src = "data:image/png;base64," + article.picture;
-=======
-  if (article.picture !== null)
+  if (article.picture!==null || article.picture!=="" || article.picture!==undefined)
     image.src = getPictureSrc(article.picture);
->>>>>>> 228d490ba8bcbc299915e328c493429f441377a7
   let hiddenContent = document.getElementById("Content").querySelector(".art-container_cont-text");
   hiddenContent.innerText = article.content;
   let hiddenHeader = document.getElementById("Header");
@@ -330,13 +325,8 @@ function addArticleInPage(article) {
   myImg.alt = "Image";
   header.innerText = article.header;
   footer.innerText = article.content.substring(0, 25) + "...";
-<<<<<<< HEAD
-  if(article.picture!==null || article.picture!=="" || article.picture!==undefined)
-    myImg.src = "data:image/png;base64," + article.picture;
-=======
-  if (article.picture !== null)
+  if (article.picture!==null || article.picture!=="" || article.picture!==undefined)
     myImg.src = getPictureSrc(article.picture);
->>>>>>> 228d490ba8bcbc299915e328c493429f441377a7
   imgDiv.appendChild(myImg);
   panel.appendChild(header);
   panel.appendChild(imgDiv);
