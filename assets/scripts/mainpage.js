@@ -538,15 +538,16 @@ function getPictureBytes(string){
 
 function cancelSave(event) {
   changeArticle();
-  let myImg = document.createElement("img");
+  let myImg = document.querySelector(".art-container_cont-image");
   if (currentArticle.picture !== null && currentArticle.picture !== "" && currentArticle.picture !== undefined)
     myImg.src = charToString(currentArticle.picture);
   else
     myImg.scr = "";
-  if (currentArticle.name !== null)
+  if (currentArticle.pic !== null && currentArticle.pic !== "" && currentArticle.pic !== undefined)
     myImg.name = currentArticle.name;
   else
     myImg.name = "";
+
 }
 
 function ChangeButtonName() {
@@ -623,7 +624,7 @@ element = document.querySelector("#back");
 element.onclick = back;
 element = document.querySelector("#vk");
 element.onclick = VKRegistration;
-window.onbeforeunload = exit;
+//window.onbeforeunload = exit;
 
 var control = document.getElementById("file");
 control.addEventListener("change", function (event) {
