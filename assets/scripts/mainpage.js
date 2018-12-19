@@ -266,14 +266,20 @@ function articlePage(article) {
   document.getElementById("constHeader").textContent = article.header;
   let content = document.getElementById("constContent").querySelector(".art-container_cont-text")
   content.innerText = article.content;
-  let image = articlePage.querySelector(".art-container_img-container")[0];
+  let image = articlePage.querySelector(".art-container_cont-image");
   if (article.picture !== null)
-    image.src = charToString(article.picture);
+    image.src = getPictureSrc(article.picture);
   let hiddenContent = document.getElementById("Content").querySelector(".art-container_cont-text");
   hiddenContent.innerText = article.content;
   let hiddenHeader = document.getElementById("Header");
   hiddenHeader.textContent = article.header;
   //image.src = article.image;
+}
+
+function getPictureSrc(string){
+  let res = charToString(article.picture);
+  res ="data:image/jpeg;base64,"+res;
+  return res;
 }
 
 function changeMainPage() {
@@ -320,7 +326,7 @@ function addArticleInPage(article) {
   header.innerText = article.header;
   footer.innerText = article.content.substring(0, 25) + "...";
   if (article.picture !== null)
-    myImg.src = strToCharCode(article.picture);
+    myImg.src = getPictureSrc(article.picture);
   imgDiv.appendChild(myImg);
   panel.appendChild(header);
   panel.appendChild(imgDiv);
@@ -520,6 +526,12 @@ function saveArticle(event) {
   xmlhttp.setRequestHeader("token", localStorage.getItem("tokenArticles"))
   xmlhttp.send(JSON.stringify(currentArticle));
   UpdateTree(currentArticle);
+}
+
+function getPictureBytes(string){
+  string = string.substring("data:image/jpeg;base64,".length);
+  let res = strToCharCode(string);
+  return res;
 }
 
 //Проверка 
