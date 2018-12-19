@@ -89,13 +89,20 @@
     </ul>
     </div>
   </nav>
-
+  <div>
+    <button id="back" class = "btn">
+     Обновить
+    </button>
+  </div>
   <div class="container art-container hidden" id="articlePage">
     <div class="container art-container_img-container">
       <img src="http://nevseoboi.com.ua/uploads/posts/2011-05/1304770938_mix-wall-44_www.nevseoboi.com.ua.jpg" class="art-container_cont-image">
-      <button class="btn art-container_btn hidden" id = "imagebtn">Изменить картинку</button>
+      <form enctype="multipart/form-data" class="hidden" id="fileform">
+        <p><input type="file" id="file">
+        </form>
       <button class="btn art-container_btn" id = "changebtn">Изменить</button>
       <button class="btn art-container_btn hidden" id = "savebtn">Сохранить</button>
+      <button class="btn art-container_btn hidden" id = "cancelbtn">Отменить</button>
     </div>
     <div class="art-container_content">
       <H1 id="constHeader">Header</H1>
@@ -179,6 +186,7 @@
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jsSHA/2.2.0/sha512.js"></script>
   <script src="scripts/mainpage.js"></script>
+  <script src = "scripts/new.js"></script>
   <script type="text/javascript">
     VK.init({
       apiId: 6786252

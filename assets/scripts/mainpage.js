@@ -3,7 +3,8 @@ var jsonresponse
 var userName;
 var allarticles
 var currentArticle;
-var userName;
+var allpictures;
+var userName = null;
 
 //Получить дерево категорий и статей, вынести всё в drop-down меню
 function getTree() {
@@ -66,8 +67,8 @@ function throughTree(level, JSONarray) {
 
 //Отобразить новую категорию в меню
 function addNewList(name, idParent, idChild) {
-  if(idParent==="null"){
-    idParent="menu";
+  if (idParent === "null") {
+    idParent = "menu";
   }
   var dropdown = document.getElementById(idParent);
   var Li = document.createElement("li");
@@ -94,7 +95,7 @@ function addArticleOnList(articles) {
   if (articles === null)
     return;
   for (i = 0; i < articles.length; i += 1) {
-    let categoryid= articles[i].catid==="null"?"menu":articles[i].catid;
+    let categoryid = articles[i].catid === "null" ? "menu" : articles[i].catid;
     var dropdown = document.getElementById(categoryid);
     var Li = document.createElement("li");
     var elA = document.createElement("a");
@@ -128,8 +129,8 @@ function addButtons(parentid) {
   var CategoryNameInput = document.createElement("input");
   catButton.innerText = "Категория";
   artButton.innerText = "Статья";
-  artButton.type="button";
-  catButton.type="button";
+  artButton.type = "button";
+  catButton.type = "button";
   articleNameInput.name = "art";
   //artButton.type = "submit";
   artButton.onclick = addNewArticle
@@ -152,12 +153,16 @@ function addButtons(parentid) {
 
 //Отдать название новой статьи по id категории, получить статью НЕПРОВЕРЕНО
 function addNewArticle(event) {
+  if (localStorage.getItem("tokenArticles") === null) {
+    alert("Войдите в систему");
+    return;
+  }
   let catid = null
   if (event.target.parentElement.parentElement.parentElement.id !== "menu")
     catid = event.target.parentElement.parentElement.parentElement.id;
   var string = server + "/" + catid + "/article/create";
   let xmlhttp = new XMLHttpRequest();
-  xmlhttp.open("POST",string , true);
+  xmlhttp.open("POST", string, true);
   xmlhttp.onreadystatechange = function () {
     if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
       let article = JSON.parse(xmlhttp.responseText)
@@ -165,7 +170,7 @@ function addNewArticle(event) {
       articlePage(article);
     }
   }
-  //xmlhttp.setRequestHeader("token", localStorage.getItem("tokenArticles"));
+  xmlhttp.setRequestHeader("token", localStorage.getItem("tokenArticles"));
   xmlhttp.send(JSON.stringify({
     art: event.target.parentElement.children[0].value
   }));
@@ -184,6 +189,10 @@ function addNewArticle(event) {
 
 // Отдать название новой категории, по id категории НЕ ПРОВЕРЕНО
 function addNewCategory(event) {
+  if (localStorage.getItem("tokenArticles") === null) {
+    alert("Войдите в систему");
+    return;
+  }
   let xmlhttp = new XMLHttpRequest();
 
   xmlhttp.onreadystatechange = function () {
@@ -196,7 +205,7 @@ function addNewCategory(event) {
   if (event.target.parentElement.parentElement.parentElement.id !== "menu")
     catid = event.target.parentElement.parentElement.parentElement.id;
   xmlhttp.open("POST", server + "/" + catid + "/create", true);
-  //xmlhttp.setRequestHeader("token", localStorage.getItem("tokenArticles"));
+  xmlhttp.setRequestHeader("token", localStorage.getItem("tokenArticles"));
   xmlhttp.send(JSON.stringify({
     cat: event.target.parentElement.children[0].value
   }));
@@ -218,6 +227,7 @@ function goToArticle(event) { //
 //Добавляет все статьи на главную страницу
 function setArticles() {
   let main = document.getElementById("allArticles");
+  allpictures = new Array();
   main.innerText = "";
   main.innerHTML = "";
   for (i = 0; i < allarticles.length; i++) {
@@ -243,11 +253,13 @@ function goToArticleFromPage(event) {
 
 //Отображает статью
 function articlePage(article) {
+  if (document.getElementById("back").innerText === "Обновить")
+    ChangeButtonName();
   currentArticle = article;
-  if(!document.getElementById("allArticles").classList.contains("hidden")){
+  if (!document.getElementById("allArticles").classList.contains("hidden")) {
     changeMainPage();
   }
-  if (document.getElementById("constHeader").classList.contains("hidden")){
+  if (document.getElementById("constHeader").classList.contains("hidden")) {
     changeArticle(null);
   }
   let articlePage = document.getElementById("articlePage");
@@ -255,6 +267,8 @@ function articlePage(article) {
   let content = document.getElementById("constContent").querySelector(".art-container_cont-text")
   content.innerText = article.content;
   let image = articlePage.querySelector(".art-container_img-container")[0];
+  if(article.picture!==null)
+    image.src = "data:image/png;base64," + article.picture;
   let hiddenContent = document.getElementById("Content").querySelector(".art-container_cont-text");
   hiddenContent.innerText = article.content;
   let hiddenHeader = document.getElementById("Header");
@@ -265,6 +279,12 @@ function articlePage(article) {
 function changeMainPage() {
   let main = document.getElementById("allArticles");
   let articlePage = document.getElementById("articlePage");
+  let search = document.querySelector(".nav.navbar-nav.navbar-right");
+  if (search.classList.contains("hidden")) {
+    search.classList.remove("hidden");
+  } else {
+    search.classList.add("hidden");
+  }
   changeVision(main, articlePage);
   // if (main.classList.contains("hidden")){
   //   main.classList.remove("hidden");
@@ -299,7 +319,8 @@ function addArticleInPage(article) {
   myImg.alt = "Image";
   header.innerText = article.header;
   footer.innerText = article.content.substring(0, 25) + "...";
-  myImg.src = "data:image/png;base64," + article.pic;
+  if(article.picture !==null)
+    myImg.src = "data:image/png;base64," + article.picture;
   imgDiv.appendChild(myImg);
   panel.appendChild(header);
   panel.appendChild(imgDiv);
@@ -333,13 +354,13 @@ function login(event) {
   hasher = new jsSHA("SHA-512", "TEXT");
   hasher.update(pswd.value);
   let hashpass = hasher.getHash("B64");
-  
+
   xmlhttp.onreadystatechange = function () {
     if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
       jsonobj = JSON.parse(xmlhttp.responseText);
       localStorage.setItem("tokenArticles", jsonobj["token"]);
       changeLoginForms();
-      setName()
+      setName(userName);
     }
   }
   xmlhttp.send(JSON.stringify({
@@ -348,12 +369,28 @@ function login(event) {
   }));
 }
 
-function VKRegistration(){
-  VK.Observer.subscribe('auth.login', function(response){
-    changeLoginForms();
-    setName(response.user.first_name)
+function VKRegistration() {
+
+  VK.Observer.subscribe('auth.login', function (response) {
+    if (response.session) {
+      getToken();
+      changeLoginForms();
+      setName(response.session.user.first_name)
+    }
   });
   VK.Auth.login(null);
+}
+
+function getToken() {
+  let xmlhttp = new XMLHttpRequest();
+  xmlhttp.onreadystatechange = function () {
+    if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+      let token = JSON.parse(xmlhttp.responseText);
+      localStorage.setItem("tokenArticles", token.token);
+    };
+  }
+  xmlhttp.open("GET", server + "/token", true);
+  xmlhttp.send();
 }
 
 //Создаёт нового пользователя, отправляя хешированные логин и пароль, получет токен пользователя
@@ -373,7 +410,7 @@ function registration(event) {
       jsonobj = JSON.parse(xmlhttp.responseText);
       localStorage.setItem("tokenArticles", jsonobj["token"]);
       changeLoginForms();
-      setName();
+      setName(userName);
     }
   }
   xmlhttp.open("POST", server + "/reg", true);
@@ -383,15 +420,9 @@ function registration(event) {
   }));
 }
 
-function setName(name){
-  let profile = document.getElementById("profile")[0];
-  if(name===null){
-    profile.innerText = userName;
-  }
-  else
-  {
-    profile.innerText = name;
-  }
+function setName(name) {
+  let profile = document.getElementById("profile").children[0];
+  profile.innerText = name;
 }
 
 function changeVision(first, second) {
@@ -422,13 +453,13 @@ function changeLoginForms() {
 
 //Выходит из профиля, отправляя токен пользователя на сервер
 function logout() {
-  userName=null;
-  if(localStorage.getItem("tokenArticles")===null)
+  userName = null;
+  VK.Auth.logout(function (response) {})
+  if (localStorage.getItem("tokenArticles") === null)
     return;
   let xmlhttp = new XMLHttpRequest();
   xmlhttp.onreadystatechange = function () {
-    if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-    }
+    if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {}
   }
   xmlhttp.open("POST", server + "/logout", true);
   xmlhttp.send(JSON.stringify({
@@ -436,7 +467,7 @@ function logout() {
   }));
   changeLoginForms();
   localStorage.removeItem("tokenArticles");
-  document.getElementById("pswd").value="";
+  document.getElementById("pswd").value = "";
 }
 
 function changeArticle(event) {
@@ -446,7 +477,17 @@ function changeArticle(event) {
   first = document.getElementById("constContent");
   second = document.getElementById("Content");
   changeVision(first, second)
-  first = document.getElementById("imagebtn");
+  /*first = document.getElementById("imagebtn");
+  if (first.classList.contains("hidden"))
+    first.classList.remove("hidden");
+  else
+    first.classList.add("hidden");*/
+  first = document.getElementById("cancelbtn");
+  if (first.classList.contains("hidden"))
+    first.classList.remove("hidden");
+  else
+    first.classList.add("hidden");
+  first = document.getElementById("fileform");
   if (first.classList.contains("hidden"))
     first.classList.remove("hidden");
   else
@@ -456,7 +497,11 @@ function changeArticle(event) {
   changeVision(first, second)
 }
 
-function saveArticle(event){
+function saveArticle(event) {
+  if (localStorage.getItem("tokenArticles") === null) {
+    alert("Войдите в систему");
+    return;
+  }
   categoryId = currentArticle.catid;
   let header = document.getElementById("Header").value;
   let content = document.getElementById("Content").querySelector(".art-container_cont-text").value;
@@ -467,24 +512,47 @@ function saveArticle(event){
   changeArticle(null);
   let xmlhttp = new XMLHttpRequest();
   xmlhttp.onreadystatechange = function () {
-    if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-    }
+    if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {}
   }
   xmlhttp.open("POST", server + "/" + categoryId + "/article", true);
+  xmlhttp.setRequestHeader("token", localStorage.getItem("tokenArticles"))
   xmlhttp.send(JSON.stringify(currentArticle));
   UpdateTree(currentArticle);
 }
 
-function UpdateTree(article){
+//Проверка 
+
+function cancelSave(event) {
+  changeArticle();
+}
+
+function ChangeButtonName() {
+  button = document.getElementById("back");
+  if (button.innerText === "Назад")
+    button.innerText = "Обновить";
+  else
+    button.innerText = "Назад";
+}
+
+function back(event) {
+
+  if (document.getElementById("allArticles").classList.contains("hidden")) {
+    changeMainPage();
+    ChangeButtonName();
+  }
+  getMainArticles();
+}
+
+function UpdateTree(article) {
   let articles = document.getElementById("menu").querySelectorAll(".article");
-  for (let i=0;i<articles.length;i++){
-    if(article.id === articles[i].parentElement.id){
-      articles[i].textContent=article.header;
+  for (let i = 0; i < articles.length; i++) {
+    if (article.id === articles[i].parentElement.id) {
+      articles[i].textContent = article.header;
     }
   }
 }
 
-function exit(){
+function exit() {
   logout();
 }
 
@@ -501,14 +569,49 @@ element = document.querySelector("#changebtn");
 element.onclick = changeArticle;
 element = document.querySelector("#savebtn");
 element.onclick = saveArticle;
+element = document.querySelector("#cancelbtn");
+element.onclick = cancelSave;
+/*element = document.querySelector("#imagebtn");
+element.onclick = addImage;*/
+element = document.querySelector("#back");
+element.onclick = back;
 element = document.querySelector("#vk");
 element.onclick = VKRegistration;
-window.onbeforeunload=exit;
+
+
+var control = document.getElementById("file");
+control.addEventListener("change", function(event) {
+  file = this.files[0];
+  data = [file.name, file.type, file.size];
+  var reader = new FileReader();
+  reader.readAsDataURL(file);
+  var img = document.querySelector(".art-container_cont-image");     
+      img.src = reader.result;  
+  reader.onload = (function (file, data) {
+    return function (e) {         
+      var img = document.querySelector(".art-container_cont-image");     
+      img.src = e.target.result;
+    }
+  }) (file, data);
+  /*reader.onload = function() {
+
+    var arrayBuffer = this.result,
+      array = new Uint8Array(arrayBuffer),
+      binaryString = String.fromCharCode.apply(null, array);
+
+    console.log(binaryString);
+
+  }*/
+}, false);
+
+window.onbeforeunload = exit;
 getTree();
 getMainArticles();
-response = VK.Auth.getLoginStatus(function(response){
+
+
+response = VK.Auth.getLoginStatus(function (response) {
   let e = response;
-  });
+});
 
 // VK.Observer.subscribe('auth.login', function(response){
 //   changeLoginForms();
