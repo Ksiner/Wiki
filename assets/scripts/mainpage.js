@@ -267,8 +267,11 @@ function articlePage(article) {
   let content = document.getElementById("constContent").querySelector(".art-container_cont-text")
   content.innerText = article.content;
   let image = articlePage.querySelector(".art-container_cont-image");
-  if (article.picture!==null && article.picture!=="" && article.picture!==undefined)
+  if (article.picture!==null && article.picture!=="" && article.picture!==undefined){
     image.src = getPictureSrc(article.picture);
+  } else {
+    image.src = "";
+  }
   let hiddenContent = document.getElementById("Content").querySelector(".art-container_cont-text");
   hiddenContent.innerText = article.content;
   let hiddenHeader = document.getElementById("Header");

@@ -5,6 +5,11 @@
     border-bottom-left-radius: 0px;
 }
 
+#back{
+    margin-top: -50px;
+    margin-left: 65px;
+}
+
 .head-container{
     padding: 0;
 }
