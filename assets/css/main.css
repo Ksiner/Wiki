@@ -55,6 +55,7 @@
 
 .margin{
     margin:5px;
+    z-index: 1;
 }
 
 
