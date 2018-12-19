@@ -3,6 +3,7 @@ package ui
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"net"
 	"net/http"
@@ -236,6 +237,7 @@ func sendPicture(db db.DataBase) http.Handler {
 
 func editArticle(db db.DataBase) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		fmt.Print(r.Header.Get("token"))
 		article := model.Article{}
 		err := deserialize(r, &article)
 		if err != nil {
@@ -252,6 +254,7 @@ func editArticle(db db.DataBase) http.Handler {
 
 func createArticle(db db.DataBase) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		fmt.Print(r.Header.Get("token"))
 		vars := mux.Vars(r)
 		article := model.Article{}
 		bufferObj := model.BufferArt{}
@@ -276,6 +279,7 @@ func createArticle(db db.DataBase) http.Handler {
 
 func createCategory(db db.DataBase) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		fmt.Print(r.Header.Get("token"))
 		vars := mux.Vars(r)
 		category := model.Category{}
 		bufferObj := model.BufferCat{}
