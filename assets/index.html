@@ -7,6 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
   <link rel="stylesheet" type="text/css" href="css/main.css">
+  <script src="https://vk.com/js/api/openapi.js?160" type="text/javascript"></script>
   <style>
     /* Remove the navbar's default rounded borders and increase the bottom margin */
     .navbar {
@@ -30,12 +31,17 @@
 <body>
   <div class="container">
     <div>
-      <form class="login-form">
+      <form class="login-form" id="login">
         <input type="text" class="form-control margin" placeholder="Логин" id = "log"/>
         <input type="password" class="form-control margin" placeholder="Пароль" id="pswd" />
-        <input type="submit" value="Войти" class="btn margin" id = "entrebtn"/>
-        <button class="btn margin" id="regisbtn">Регистрация</button>
+        <input type="button" value="Войти" class="btn margin" id = "entrebtn"/>
+        <button class="btn margin" id="regisbtn" type="button">Регистрация</button>
       </form>
+      <div class = "login-form hidden" id="profile">
+        <p></p>
+        <button class = "btn margin" id="logoutbtn">Выйти</button>
+      </div>
+      <button class="btn margin" id="vk">ВКонтаке</button>
     </div>
     <div class="jumbotron">
       <h1>База знаний</h1>
@@ -84,20 +90,26 @@
     </div>
   </nav>
 
-  <!-- <div class="container art-container">
+  <div class="container art-container hidden" id="articlePage">
     <div class="container art-container_img-container">
       <img src="http://nevseoboi.com.ua/uploads/posts/2011-05/1304770938_mix-wall-44_www.nevseoboi.com.ua.jpg" class="art-container_cont-image">
-      <button class="btn art-container_btn">Изменить</button>
+      <button class="btn art-container_btn hidden" id = "imagebtn">Изменить картинку</button>
+      <button class="btn art-container_btn" id = "changebtn">Изменить</button>
+      <button class="btn art-container_btn hidden" id = "savebtn">Сохранить</button>
     </div>
     <div class="art-container_content">
-      <H1>Header</H1>
-      <div>
+      <H1 id="constHeader">Header</H1>
+      <textarea class="hidden" id="Header"></textarea>
+      <div id="constContent">
         <p class="art-container_cont-text">texawdawdadadwattexawdawdadadwattexawdawdadadwattexawdawdadadwattexawdawdadadwattexawdawdadadwattex
           awdawdadadwattexawdawdadadwa
           ttexawdawdadadwattexawdawdadadwattexawdawdadadwattexawdawdadadwattexawdawdadadwattexawdawdadadwat</p>
       </div>
+      <div id ="Content" class="hidden">
+          <textarea class="art-container_cont-text"></textarea>
+      </div>
     </div>
-  </div> -->
+  </div>
 
   <div class="container" id = "allArticles">
 
@@ -167,7 +179,11 @@
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jsSHA/2.2.0/sha512.js"></script>
   <script src="scripts/mainpage.js"></script>
-
+  <script type="text/javascript">
+    VK.init({
+      apiId: 6786252
+    });
+  </script>
 </body>
 
 </html>
