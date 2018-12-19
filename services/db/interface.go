@@ -16,4 +16,5 @@ type DataBase interface {
 	RegisterUser(*model.User) (*model.Token, error)
 	AddToken(*model.Token) error
 	CheckToken(*model.Token) error
+	CreateToken() (*model.Token, error)
 }

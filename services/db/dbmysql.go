@@ -24,6 +24,24 @@ func NewMySql(cfg Config) *DbConnMysql {
 	return &DbConnMysql{Cfg: cfg}
 }
 
+func (dbc *DbConnMysql) CreateToken() (*model.Token, error) {
+	db, err := gorm.Open(dbc.Cfg.DbDialect, dbc.Cfg.DbConnStr)
+	if err != nil {
+		fmt.Printf("Error in \"db.SelectArticles\" OPEN DB: %v", err.Error())
+		return nil, err
+	}
+	defer db.Close()
+	token := model.Token{Token: uuid.Must(uuid.NewV4()).String()}
+	db.Save(&token)
+	if db.Error != nil {
+		err = db.Error
+		db.Error = nil
+		fmt.Printf("Error in \"db.RegisterUser\" INSERT AUTH TOKEN: %v", err.Error())
+		return nil, err
+	}
+	return &token, nil
+}
+
 func (dbc *DbConnMysql) SelectArticles() ([]*model.Article, error) {
 	db, err := gorm.Open(dbc.Cfg.DbDialect, dbc.Cfg.DbConnStr)
 	if err != nil {

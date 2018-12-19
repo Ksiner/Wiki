@@ -49,6 +49,7 @@ func routing(db db.DataBase, cfg Config) *mux.Router {
 	r.Handle("/login", loginUser(db))
 	r.Handle("/logout", logOutUser(db))
 	r.Handle("/reg", register(db))
+	r.Handle("/token", createToken(db))
 	return r
 }
 
@@ -56,6 +57,21 @@ func getFiles(cfg Config) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		vars := mux.Vars(r)
 		http.ServeFile(w, r, cfg.Assets+vars["filegroup"]+"/"+vars["filename"])
+	})
+}
+
+func createToken(db db.DataBase) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		token, err := db.CreateToken()
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		err = serialazeAndSend(w, token)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
 	})
 }
 
