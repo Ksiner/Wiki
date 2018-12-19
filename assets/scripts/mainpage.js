@@ -273,9 +273,9 @@ function articlePage(article) {
     image.src = "";
   }
   let hiddenContent = document.getElementById("Content").querySelector(".art-container_cont-text");
-  hiddenContent.innerText = article.content;
+  hiddenContent.value = article.content;
   let hiddenHeader = document.getElementById("Header");
-  hiddenHeader.textContent = article.header;
+  hiddenHeader.value = article.header;
   //image.src = article.image;
 }
 
@@ -344,7 +344,7 @@ function searchOnInput(event) {
   main.innerText = "";
   main.innerHTML = "";
   for (i = 0; i < allarticles.length; i++) {
-    if (allarticles[i].content.includes(event.target.value)) {
+    if (allarticles[i].content.includes(event.target.value) || allarticles[i].header.includes(event.target.value)) {
       addArticleInPage(allarticles[i]);
     }
   }
@@ -538,7 +538,7 @@ function getPictureBytes(string){
 //Проверка 
 
 function cancelSave(event) {
-  changeArticle();
+  /*changeArticle();
   let myImg = document.querySelector(".art-container_cont-image");
   if (currentArticle.picture !== null && currentArticle.picture !== "" && currentArticle.picture !== undefined)
     myImg.src = charToString(currentArticle.picture);
@@ -547,7 +547,8 @@ function cancelSave(event) {
   if (currentArticle.pic !== null && currentArticle.pic !== "" && currentArticle.pic !== undefined)
     myImg.name = currentArticle.name;
   else
-    myImg.name = "";
+    myImg.name = "";*/
+    articlePage(currentArticle);
 
 }
 
