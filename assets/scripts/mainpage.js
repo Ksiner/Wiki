@@ -110,10 +110,11 @@ function addArticleOnList(articles) {
     elA.classList.add("article");
     elA.textContent = articles[i].header;
     Li.appendChild(elA);
-    if (dropdown.childElementCount >= 4 && dropdown.lastElementChild.childElementCount > 1)
-      dropdown.insertBefore(Li, dropdown.childNodes[dropdown.childElementCount - 1]);
+    dropdown.insertBefore(Li,dropdown.childNodes[dropdown.childNodes.length-1]);
+    /*if (dropdown.childElementCount >= 4 && dropdown.lastElementChild.childElementCount > 1)
+      dropdown.insertBefore(Li, dropdown.childNodes[dropdown.childElementCount]);
     else
-      dropdown.appendChild(Li);
+      dropdown.appendChild(Li);*/
   }
 }
 //Добавление кнопок для добавления статей и категорий
@@ -157,6 +158,11 @@ function addNewArticle(event) {
     alert("Войдите в систему");
     return;
   }
+  if(event.target.parentElement.children[0].value==="")
+  {
+    alert("Введите имя");
+    return;
+  }
   let catid = null
   if (event.target.parentElement.parentElement.parentElement.id !== "menu")
     catid = event.target.parentElement.parentElement.parentElement.id;
@@ -193,12 +199,24 @@ function addNewCategory(event) {
     alert("Войдите в систему");
     return;
   }
+  if(event.target.parentElement.children[0].value==="")
+  {
+    alert("Введите имя");
+    return;
+  }
   let xmlhttp = new XMLHttpRequest();
-
   xmlhttp.onreadystatechange = function () {
     if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
       jsonobj = JSON.parse(xmlhttp.responseText)
       addNewList(jsonobj.name, jsonobj.parentid, jsonobj.id);
+      $('.dropdown a.test').on("click", function (e) {
+        $(this).next('ul').toggle();
+        e.stopPropagation();
+        e.preventDefault();
+      });
+      let elem = document.getElementById(jsonobj.id)
+      if(elem.childNodes.length===0)
+        addButtons(jsonobj.id);
     }
   }
   catid = null
@@ -345,6 +363,10 @@ function searchOnInput(event) {
   let main = document.getElementById("allArticles");
   main.innerText = "";
   main.innerHTML = "";
+  if(event.target.value===""){
+    setArticles();
+    return;
+  }
   for (i = 0; i < allarticles.length; i++) {
     if (allarticles[i].content.includes(event.target.value) || allarticles[i].header.includes(event.target.value)) {
       addArticleInPage(allarticles[i]);
