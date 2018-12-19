@@ -260,8 +260,9 @@ func editArticle(db db.DataBase, cfg Config) http.Handler {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
+
 		if _, err := os.Stat(cfg.Assets + "picture/" + articleWithPic.Pic); os.IsNotExist(err) {
-			if err := ioutil.WriteFile(articleWithPic.Pic, articleWithPic.Picture, 0644); err != nil {
+			if err := ioutil.WriteFile(cfg.Assets+"picture/"+articleWithPic.Pic, articleWithPic.Picture, 0644); err != nil {
 				http.Error(w, err.Error(), http.StatusInternalServerError)
 				return
 			}

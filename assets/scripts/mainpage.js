@@ -531,7 +531,7 @@ function saveArticle(event) {
 function getPictureBytes(string){
   string = string.substring("data:image/jpeg;base64,".length);
   let res = strToCharCode(string);
-  return res;
+  return string;
 }
 
 //Проверка 
