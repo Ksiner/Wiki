@@ -273,9 +273,9 @@ function articlePage(article) {
     image.src = "";
   }
   let hiddenContent = document.getElementById("Content").querySelector(".art-container_cont-text");
-  hiddenContent.innerText = article.content;
+  hiddenContent.value = article.content;
   let hiddenHeader = document.getElementById("Header");
-  hiddenHeader.textContent = article.header;
+  hiddenHeader.value = article.header;
   //image.src = article.image;
 }
 
@@ -344,7 +344,7 @@ function searchOnInput(event) {
   main.innerText = "";
   main.innerHTML = "";
   for (i = 0; i < allarticles.length; i++) {
-    if (allarticles[i].content.includes(event.target.value)) {
+    if (allarticles[i].content.includes(event.target.value) || allarticles[i].header.includes(event.target.value)) {
       addArticleInPage(allarticles[i]);
     }
   }
@@ -532,24 +532,24 @@ function saveArticle(event) {
 }
 
 function getPictureBytes(string){
-  string = string.substring("data:image/jpeg;base64,".length);
-  let res = strToCharCode(string);
-  return string;
+  return string.substring("data:image/jpeg;base64,".length);
 }
 
 //Проверка 
 
 function cancelSave(event) {
-  changeArticle();
-  let myImg = document.createElement("img");
+  /*changeArticle();
+  let myImg = document.querySelector(".art-container_cont-image");
   if (currentArticle.picture !== null && currentArticle.picture !== "" && currentArticle.picture !== undefined)
     myImg.src = charToString(currentArticle.picture);
   else
     myImg.scr = "";
-  if (currentArticle.name !== null)
+  if (currentArticle.pic !== null && currentArticle.pic !== "" && currentArticle.pic !== undefined)
     myImg.name = currentArticle.name;
   else
-    myImg.name = "";
+    myImg.name = "";*/
+    articlePage(currentArticle);
+
 }
 
 function ChangeButtonName() {
@@ -626,6 +626,7 @@ element = document.querySelector("#back");
 element.onclick = back;
 element = document.querySelector("#vk");
 element.onclick = VKRegistration;
+//window.onbeforeunload = exit;
 
 var control = document.getElementById("file");
 control.addEventListener("change", function (event) {
@@ -636,7 +637,7 @@ control.addEventListener("change", function (event) {
   reader.readAsDataURL(file);
 }, false);
 
-window.onbeforeunload = exit;
+
 getTree();
 getMainArticles();
 response = VK.Auth.getLoginStatus(function (response) {
