@@ -254,17 +254,32 @@ func sendPicture(db db.DataBase) http.Handler {
 func editArticle(db db.DataBase) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		fmt.Print(r.Header.Get("token"))
-		article := model.Article{}
-		err := deserialize(r, &article)
+		articleWithPic := model.ArticleWithPic{}
+		err := deserialize(r, &articleWithPic)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
-		err = db.UpdateArticle(&article, false)
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
+		if _, err := os.Stat("/picture/" + articleWithPic.Pic); os.IsNotExist(err) {
+			if err := ioutil.WriteFile(articleWithPic.Pic, articleWithPic.Picture, 0644); err != nil {
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+				return
+			}
+			article := model.Article{
+				ID:      articleWithPic.ID,
+				Catid:   articleWithPic.Catid,
+				Header:  articleWithPic.Header,
+				Content: articleWithPic.Content,
+				Pic:     articleWithPic.Pic,
+				Views:   articleWithPic.Views,
+			}
+			err = db.UpdateArticle(&article, false)
+			if err != nil {
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+				return
+			}
 		}
+
 	})
 }
 
