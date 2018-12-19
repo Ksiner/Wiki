@@ -595,6 +595,13 @@ function exit() {
   logout();
 }
 
+function showPic(event){
+  if(event.target.readyState===2){
+    var img = document.querySelector(".art-container_cont-image");
+    img.src = event.target.result;
+    img.name = file.name;
+  }
+}
 
 element = document.getElementById("example-search-input")
 element.oninput = searchOnInput;
@@ -619,14 +626,11 @@ element.onclick = VKRegistration;
 
 var control = document.getElementById("file");
 control.addEventListener("change", function (event) {
+  var reader = new FileReader();
+  reader.onload = showPic;
   file = this.files[0];
   data = [file.name, file.type, file.size];
-  var reader = new FileReader();
   reader.readAsDataURL(file);
-
-  var img = document.querySelector(".art-container_cont-image");
-  img.src = reader.result;
-  img.name = file.name;
 }, false);
 
 window.onbeforeunload = exit;
