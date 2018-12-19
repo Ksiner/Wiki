@@ -267,8 +267,8 @@ function articlePage(article) {
   let content = document.getElementById("constContent").querySelector(".art-container_cont-text")
   content.innerText = article.content;
   let image = articlePage.querySelector(".art-container_img-container")[0];
-  if(article.picture!==null)
-    image.src = "data:image/png;base64," + article.picture;
+  if (article.picture !== null)
+    image.src = charToString(article.picture);
   let hiddenContent = document.getElementById("Content").querySelector(".art-container_cont-text");
   hiddenContent.innerText = article.content;
   let hiddenHeader = document.getElementById("Header");
@@ -319,8 +319,8 @@ function addArticleInPage(article) {
   myImg.alt = "Image";
   header.innerText = article.header;
   footer.innerText = article.content.substring(0, 25) + "...";
-  if(article.picture !==null)
-    myImg.src = "data:image/png;base64," + article.picture;
+  if (article.picture !== null)
+    myImg.src = strToCharCode(article.picture);
   imgDiv.appendChild(myImg);
   panel.appendChild(header);
   panel.appendChild(imgDiv);
@@ -370,7 +370,6 @@ function login(event) {
 }
 
 function VKRegistration() {
-
   VK.Observer.subscribe('auth.login', function (response) {
     if (response.session) {
       getToken();
@@ -509,6 +508,9 @@ function saveArticle(event) {
   currentArticle.content = content;
   document.getElementById("constContent").querySelector(".art-container_cont-text").innerText = content;
   document.getElementById("constHeader").textContent = header;
+  let img = document.querySelector(".art-container_cont-image");
+  currentArticle.picture = strToCharCode(img.src);
+  currentArticle.pic = img.name;
   changeArticle(null);
   let xmlhttp = new XMLHttpRequest();
   xmlhttp.onreadystatechange = function () {
@@ -524,6 +526,15 @@ function saveArticle(event) {
 
 function cancelSave(event) {
   changeArticle();
+  let myImg = document.createElement("img");
+  if (currentArticle.picture !== null)
+    myImg.src = charToString(currentArticle.picture);
+  else
+    myImg.scr = "";
+  if (currentArticle.name !== null)
+    myImg.name = currentArticle.name;
+  else
+    myImg.name = "";
 }
 
 function ChangeButtonName() {
@@ -552,6 +563,22 @@ function UpdateTree(article) {
   }
 }
 
+function strToCharCode(string) {
+  result = new Array();
+  for (let i = 0; i < string.length; i++) {
+    result.push(string.charCodeAt(i));
+  }
+  return result;
+}
+
+function charToString(array) {
+  result = new String();
+  for (let i = 0; i < array.length; i++) {
+    result.push(String.fromCharCode(array[i]));
+  }
+  return result;
+}
+
 function exit() {
   logout();
 }
@@ -578,37 +605,21 @@ element.onclick = back;
 element = document.querySelector("#vk");
 element.onclick = VKRegistration;
 
-
 var control = document.getElementById("file");
-control.addEventListener("change", function(event) {
+control.addEventListener("change", function (event) {
   file = this.files[0];
   data = [file.name, file.type, file.size];
   var reader = new FileReader();
   reader.readAsDataURL(file);
-  var img = document.querySelector(".art-container_cont-image");     
-      img.src = reader.result;  
-  reader.onload = (function (file, data) {
-    return function (e) {         
-      var img = document.querySelector(".art-container_cont-image");     
-      img.src = e.target.result;
-    }
-  }) (file, data);
-  /*reader.onload = function() {
 
-    var arrayBuffer = this.result,
-      array = new Uint8Array(arrayBuffer),
-      binaryString = String.fromCharCode.apply(null, array);
-
-    console.log(binaryString);
-
-  }*/
+  var img = document.querySelector(".art-container_cont-image");
+  img.src = reader.result;
+  img.name = file.name;
 }, false);
 
 window.onbeforeunload = exit;
 getTree();
 getMainArticles();
-
-
 response = VK.Auth.getLoginStatus(function (response) {
   let e = response;
 });
