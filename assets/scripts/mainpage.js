@@ -325,7 +325,7 @@ function addArticleInPage(article) {
   myImg.alt = "Image";
   header.innerText = article.header;
   footer.innerText = article.content.substring(0, 25) + "...";
-  if (article.picture!==null && article.picture!=="" && article.picture!==undefined)
+  if (article.picture !== null && article.picture !== "" && article.picture !== undefined)
     myImg.src = getPictureSrc(article.picture);
   imgDiv.appendChild(myImg);
   panel.appendChild(header);
@@ -515,7 +515,7 @@ function saveArticle(event) {
   document.getElementById("constContent").querySelector(".art-container_cont-text").innerText = content;
   document.getElementById("constHeader").textContent = header;
   let img = document.querySelector(".art-container_cont-image");
-  currentArticle.picture = strToCharCode(img.src);
+  currentArticle.picture = getPictureBytes(img.src);
   currentArticle.pic = img.name;
   changeArticle(null);
   let xmlhttp = new XMLHttpRequest();
@@ -539,7 +539,7 @@ function getPictureBytes(string){
 function cancelSave(event) {
   changeArticle();
   let myImg = document.createElement("img");
-  if (currentArticle.picture !== null)
+  if (currentArticle.picture !== null && currentArticle.picture !== "" && currentArticle.picture !== undefined)
     myImg.src = charToString(currentArticle.picture);
   else
     myImg.scr = "";
@@ -586,8 +586,8 @@ function strToCharCode(string) {
 function charToString(array) {
   result = [];
   for (let i = 0; i < array.length; i++) {
-    result.push(String.fromCharCode(array[i]));
-  } 
+    result+=String.fromCharCode(array[i]);
+  }
   return result;
 }
 
