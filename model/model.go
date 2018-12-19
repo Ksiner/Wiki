@@ -9,6 +9,16 @@ type Article struct {
 	Views   int64  `gorm:"default:1" json:"views"`
 }
 
+type ArticleWithPic struct {
+	Pic     string `json:"pic"`
+	Header  string `json:"header"`
+	Content string `json:"content"`
+	ID      string `json:"id"`
+	Catid   string `json:"catid"`
+	Views   int64  `json:"views"`
+	Picture []byte `json:"picture"`
+}
+
 type Picture struct {
 	Pic []byte `json:"pic"`
 }

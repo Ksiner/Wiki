@@ -163,7 +163,23 @@ func getArticles(db db.DataBase) http.Handler {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
-		err = serialazeAndSend(w, articles)
+		artsWithPics := make([]*model.ArticleWithPic, 0)
+		for _, article := range articles {
+			withPic := &model.ArticleWithPic{
+				ID:      article.ID,
+				Catid:   article.Catid,
+				Header:  article.Header,
+				Content: article.Content,
+				Pic:     article.Pic,
+				Views:   article.Views,
+			}
+			pictureBytes, _ := ioutil.ReadFile("/picture/" + withPic.Pic)
+			if pictureBytes != nil {
+				withPic.Picture = pictureBytes
+			}
+			artsWithPics = append(artsWithPics, withPic)
+		}
+		err = serialazeAndSend(w, artsWithPics)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
