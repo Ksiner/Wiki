@@ -42,10 +42,10 @@ func routing(db db.DataBase, cfg Config) *mux.Router {
 	r.Handle("/{category}/article/{id}", getArticle(db)).Methods("GET")
 	r.HandleFunc("/{category}/article/{path}", getPicture).Methods("GET")
 	r.Handle("/{category}/article/{id}/{path}", sendPicture(db)).Methods("POST")
-	r.Handle("/{category}/article", editArticle(db)).Methods("POST")
+	r.Handle("/{category}/article", editArticle(db, cfg)).Methods("POST")
 	r.Handle("/{category}/article/create", createArticle(db))
 	r.Handle("/{category}/create", createCategory(db)).Methods("POST")
-	r.Handle("/init", getArticles(db))
+	r.Handle("/init", getArticles(db, cfg))
 	r.Handle("/catTree", getTree(db))
 	r.Handle("/login", loginUser(db))
 	r.Handle("/logout", logOutUser(db))
@@ -156,7 +156,7 @@ func getTree(db db.DataBase) http.Handler {
 	})
 }
 
-func getArticles(db db.DataBase) http.Handler {
+func getArticles(db db.DataBase, cfg Config) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		articles, err := db.SelectArticles()
 		if err != nil {
@@ -173,7 +173,7 @@ func getArticles(db db.DataBase) http.Handler {
 				Pic:     article.Pic,
 				Views:   article.Views,
 			}
-			pictureBytes, _ := ioutil.ReadFile("/picture/" + withPic.Pic)
+			pictureBytes, _ := ioutil.ReadFile(cfg.Assets + "/picture/" + withPic.Pic)
 			if pictureBytes != nil {
 				withPic.Picture = pictureBytes
 			}
@@ -251,7 +251,7 @@ func sendPicture(db db.DataBase) http.Handler {
 	})
 }
 
-func editArticle(db db.DataBase) http.Handler {
+func editArticle(db db.DataBase, cfg Config) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		fmt.Print(r.Header.Get("token"))
 		articleWithPic := model.ArticleWithPic{}
@@ -260,7 +260,7 @@ func editArticle(db db.DataBase) http.Handler {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
-		if _, err := os.Stat("/picture/" + articleWithPic.Pic); os.IsNotExist(err) {
+		if _, err := os.Stat(cfg.Assets + "/picture/" + articleWithPic.Pic); os.IsNotExist(err) {
 			if err := ioutil.WriteFile(articleWithPic.Pic, articleWithPic.Picture, 0644); err != nil {
 				http.Error(w, err.Error(), http.StatusInternalServerError)
 				return
