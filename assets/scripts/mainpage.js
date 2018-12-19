@@ -588,7 +588,7 @@ function charToString(array) {
   for (let i = 0; i < array.length; i++) {
     result+=String.fromCharCode(array[i]);
   }
-  return result;
+  return array;
 }
 
 function exit() {
