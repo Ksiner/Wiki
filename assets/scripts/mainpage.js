@@ -266,8 +266,8 @@ function articlePage(article) {
   document.getElementById("constHeader").textContent = article.header;
   let content = document.getElementById("constContent").querySelector(".art-container_cont-text")
   content.innerText = article.content;
-  let image = articlePage.querySelector(".art-container_img-container")[0];
-  if(article.picture!==null)
+  let image = articlePage.querySelector(".art-container_cont-image");
+  if(article.picture!==null || article.picture!=="" || article.picture!==undefined)
     image.src = "data:image/png;base64," + article.picture;
   let hiddenContent = document.getElementById("Content").querySelector(".art-container_cont-text");
   hiddenContent.innerText = article.content;
@@ -319,7 +319,7 @@ function addArticleInPage(article) {
   myImg.alt = "Image";
   header.innerText = article.header;
   footer.innerText = article.content.substring(0, 25) + "...";
-  if(article.picture !==null)
+  if(article.picture!==null || article.picture!=="" || article.picture!==undefined)
     myImg.src = "data:image/png;base64," + article.picture;
   imgDiv.appendChild(myImg);
   panel.appendChild(header);
