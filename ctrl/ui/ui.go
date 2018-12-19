@@ -266,19 +266,20 @@ func editArticle(db db.DataBase, cfg Config) http.Handler {
 				http.Error(w, err.Error(), http.StatusInternalServerError)
 				return
 			}
-			article := model.Article{
-				ID:      articleWithPic.ID,
-				Catid:   articleWithPic.Catid,
-				Header:  articleWithPic.Header,
-				Content: articleWithPic.Content,
-				Pic:     articleWithPic.Pic,
-				Views:   articleWithPic.Views,
-			}
-			err = db.UpdateArticle(&article, false)
-			if err != nil {
-				http.Error(w, err.Error(), http.StatusInternalServerError)
-				return
-			}
+			
+		}
+		article := model.Article{
+			ID:      articleWithPic.ID,
+			Catid:   articleWithPic.Catid,
+			Header:  articleWithPic.Header,
+			Content: articleWithPic.Content,
+			Pic:     articleWithPic.Pic,
+			Views:   articleWithPic.Views,
+		}
+		err = db.UpdateArticle(&article, false)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
 		}
 
 	})
