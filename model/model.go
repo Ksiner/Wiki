@@ -41,10 +41,12 @@ type User struct {
 	Login string `json:"login"`
 	Pass  string `json:"pass"`
 	Email string `json:"email"`
+	Role  string `json:"role"`
 }
 
 type Token struct {
 	Token string `json:"token"`
+	Role  string `json:"role"`
 }
 
 type BufferArt struct {

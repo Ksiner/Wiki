@@ -17,4 +17,6 @@ type DataBase interface {
 	AddToken(*model.Token) error
 	CheckToken(*model.Token) error
 	CreateToken() (*model.Token, error)
+	DeleteArticles([]*model.Article) error
+	DeleteCaregories([]*model.Category) error
 }

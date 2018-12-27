@@ -51,6 +51,8 @@ func routing(db db.DataBase, cfg Config) *mux.Router {
 	r.Handle("/logout", logOutUser(db))
 	r.Handle("/reg", register(db))
 	r.Handle("/token", createToken(db))
+	r.Handle("/deleteArts", deleteArts(db))
+	r.Handle("/deleteCats", deleteCats(db))
 	return r
 }
 
@@ -58,6 +60,34 @@ func getFiles(cfg Config) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		vars := mux.Vars(r)
 		http.ServeFile(w, r, cfg.Assets+vars["filegroup"]+"/"+vars["filename"])
+	})
+}
+
+func deleteArts(db db.DataBase) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		arts := make([]*model.Article, 0)
+		if err := deserialize(r, &arts); err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		if err := db.DeleteArticles(arts); err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+	})
+}
+
+func deleteCats(db db.DataBase) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		cats := make([]*model.Category, 0)
+		if err := deserialize(r, &cats); err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		if err := db.DeleteCaregories(cats); err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
 	})
 }
 
@@ -266,7 +296,7 @@ func editArticle(db db.DataBase, cfg Config) http.Handler {
 				http.Error(w, err.Error(), http.StatusInternalServerError)
 				return
 			}
-			
+
 		}
 		article := model.Article{
 			ID:      articleWithPic.ID,

@@ -24,24 +24,6 @@ func NewMySql(cfg Config) *DbConnMysql {
 	return &DbConnMysql{Cfg: cfg}
 }
 
-func (dbc *DbConnMysql) CreateToken() (*model.Token, error) {
-	db, err := gorm.Open(dbc.Cfg.DbDialect, dbc.Cfg.DbConnStr)
-	if err != nil {
-		fmt.Printf("Error in \"db.SelectArticles\" OPEN DB: %v", err.Error())
-		return nil, err
-	}
-	defer db.Close()
-	token := model.Token{Token: uuid.Must(uuid.NewV4()).String()}
-	db.Save(&token)
-	if db.Error != nil {
-		err = db.Error
-		db.Error = nil
-		fmt.Printf("Error in \"db.RegisterUser\" INSERT AUTH TOKEN: %v", err.Error())
-		return nil, err
-	}
-	return &token, nil
-}
-
 func (dbc *DbConnMysql) SelectArticles() ([]*model.Article, error) {
 	db, err := gorm.Open(dbc.Cfg.DbDialect, dbc.Cfg.DbConnStr)
 	if err != nil {
@@ -192,6 +174,61 @@ func (dbc *DbConnMysql) UpdateArticlePic(artID string, path string) error {
 	return nil
 }
 
+func (dbc *DbConnMysql) DeleteArticles(arts []*model.Article) error {
+	db, err := gorm.Open(dbc.Cfg.DbDialect, dbc.Cfg.DbConnStr)
+	if err != nil {
+		fmt.Printf("Error in \"db.DeleteArticles\" OPEN DB: %v", err.Error())
+		return err
+	}
+	defer db.Close()
+
+	db.Delete(&arts)
+	if db.Error != nil {
+		err = db.Error
+		db.Error = nil
+		fmt.Printf("Error in \"db.DeleteArticles\" DELETE ARTS: %v", err.Error())
+		return err
+	}
+	return nil
+}
+
+func (dbc *DbConnMysql) DeleteCaregories(cats []*model.Category) error {
+	db, err := gorm.Open(dbc.Cfg.DbDialect, dbc.Cfg.DbConnStr)
+	if err != nil {
+		fmt.Printf("Error in \"db.DeleteCaregories\" OPEN DB: %v", err.Error())
+		return err
+	}
+	defer db.Close()
+
+	db.Delete(&cats)
+
+	if db.Error != nil {
+		err = db.Error
+		db.Error = nil
+		fmt.Printf("Error in \"db.DeleteCaregories\" DELETE CATS: %v", err.Error())
+		return err
+	}
+	return nil
+}
+
+func (dbc *DbConnMysql) CreateToken() (*model.Token, error) {
+	db, err := gorm.Open(dbc.Cfg.DbDialect, dbc.Cfg.DbConnStr)
+	if err != nil {
+		fmt.Printf("Error in \"db.SelectArticles\" OPEN DB: %v", err.Error())
+		return nil, err
+	}
+	defer db.Close()
+	token := model.Token{Token: uuid.Must(uuid.NewV4()).String(), Role: "reader"}
+	db.Save(&token)
+	if db.Error != nil {
+		err = db.Error
+		db.Error = nil
+		fmt.Printf("Error in \"db.RegisterUser\" INSERT AUTH TOKEN: %v", err.Error())
+		return nil, err
+	}
+	return &token, nil
+}
+
 func (dbc *DbConnMysql) AddToken(token *model.Token) error {
 	db, err := gorm.Open(dbc.Cfg.DbDialect, dbc.Cfg.DbConnStr)
 	if err != nil {
@@ -242,7 +279,7 @@ func (dbc *DbConnMysql) AuthUser(user *model.User) (*model.Token, error) {
 	if userCheck.ID == "" {
 		return nil, errors.New(user.Login + " no such user!")
 	}
-	token := model.Token{Token: uuid.Must(uuid.NewV4()).String()}
+	token := model.Token{Token: uuid.Must(uuid.NewV4()).String(), Role: userCheck.Role}
 	db.Save(&token)
 	if db.Error != nil {
 		err = db.Error
@@ -285,7 +322,7 @@ func (dbc *DbConnMysql) RegisterUser(user *model.User) (*model.Token, error) {
 		fmt.Printf("Error in \"db.RegisterUser\" INSERT USER: %v", err.Error())
 		return nil, err
 	}
-	token := model.Token{Token: uuid.Must(uuid.NewV4()).String()}
+	token := model.Token{Token: uuid.Must(uuid.NewV4()).String(), Role: "reader"}
 	db.Save(&token)
 	if db.Error != nil {
 		err = db.Error
