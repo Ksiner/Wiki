@@ -5,6 +5,10 @@ var allarticles
 var currentArticle;
 var allpictures;
 var userName = null;
+const readerRole = "reader";
+const adminRole = "admin";
+var delArticles
+var delCat
 
 //Получить дерево категорий и статей, вынести всё в drop-down меню
 function getTree() {
@@ -13,7 +17,8 @@ function getTree() {
     if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
       //alert(xmlhttp.responseText);
       jsonresponse = JSON.parse(xmlhttp.responseText);
-      throughTree(0, jsonresponse);
+      tree = jsonresponse;
+      throughTree(0, tree);
       $(document).ready(function () {
         $('.dropdown a.test').on("click", function (e) {
           $(this).next('ul').toggle();
@@ -47,9 +52,6 @@ function getMainArticles() {
 //Вынести дерево в dropdown меню
 function throughTree(level, JSONarray) {
   for (let i = 0; i < JSONarray.length; i += 1) {
-
-    //debugger;
-
     var parentid = level == 0 ? "menu" : JSONarray[i]["category"].parentid;
     var currentid = JSONarray[i]["category"].id;
     addNewList(JSONarray[i]["category"].name, parentid, currentid);
@@ -67,7 +69,7 @@ function throughTree(level, JSONarray) {
 
 //Отобразить новую категорию в меню
 function addNewList(name, idParent, idChild) {
-  if (idParent === "null") {
+  if (idParent === "null" || idParent==="") {
     idParent = "menu";
   }
   var dropdown = document.getElementById(idParent);
@@ -75,6 +77,7 @@ function addNewList(name, idParent, idChild) {
   var elA = document.createElement("a");
   var elSpan = document.createElement("span");
   var elementUL = document.createElement("ul");
+  let DelBtn = document.createElement("button");
   elSpan.classList.add("caret");
   elA.href = "#";
   elA.tabIndex = "-1";
@@ -84,10 +87,61 @@ function addNewList(name, idParent, idChild) {
   elementUL.classList.add("dropdown-menu");
   elementUL.id = idChild;
   elA.appendChild(elSpan);
+  DelBtn.classList.add("delBtn");
+  DelBtn.classList.add("btn");
+  DelBtn.onclick = deleteCat;
+  DelBtn.value = "Удалить";
+  let role = localStorage.getItem("role");
+  if (role === null || role === readerRole)
+    DelBtn.classList.add("hidden");
   Li.appendChild(elA);
   Li.appendChild(elementUL);
+  Li.appendChild(DelBtn);
   dropdown.insertBefore(Li, dropdown.childNodes[0]);
+}
 
+function deleteCat(event) {
+  delArticles = new Array();
+  delCat = new Array();
+  let catId = event.target.parentElement.children[1].id;
+  let articles = document.getElementById(catId).querySelectorAll(".article");
+  let cat = document.getElementById(catId).querySelectorAll(".category");
+  for (let i = 0; i < articles.length; i++) {
+    del(articles[i].parentElement.id);
+  }
+  for (let i = 0; i < cat.length; i++) {
+    delCat.push({
+      id: cat[i].parentElement.children[1].id,
+      name: "",
+      parentid: ""
+    });
+  }
+  delCat.push({
+    id: catId,
+    name: "",
+    parentid: ""
+  });
+  sentCatToDel(delCat);
+  parent = event.target.parentElement.parentElement;
+  parent.removeChild(event.target.parentElement);
+  // var cat = findCat(catId, tree);
+  // document.removeChild(document.getElementById(catId));
+
+  // sentArtToDel(delArticles);
+  // sentCatToDel(delCat);
+}
+
+function sentCatToDel(categories) {
+  let xmlhttp = new XMLHttpRequest();
+  let string = server + "/deleteCats";
+  xmlhttp.open("POST", string, true);
+  xmlhttp.onreadystatechange = function () {
+    if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {}
+  }
+  xmlhttp.setRequestHeader("token", localStorage.getItem("tokenArticles"));
+  xmlhttp.send(JSON.stringify(
+    categories
+  ));
 }
 
 //Отобразить статьи в категории
@@ -99,6 +153,7 @@ function addArticleOnList(articles) {
     var dropdown = document.getElementById(categoryid);
     var Li = document.createElement("li");
     var elA = document.createElement("a");
+    let DelBtn = document.createElement("button");
     Li.id = articles[i].id;
     /*elA.onclick=(e)=>{
       console.log(e.target.parentElement.id+" was clicked");
@@ -109,14 +164,92 @@ function addArticleOnList(articles) {
     elA.classList.add("test");
     elA.classList.add("article");
     elA.textContent = articles[i].header;
+    DelBtn.classList.add("delBtn");
+    DelBtn.classList.add("btn");
+    DelBtn.value = "Удалить";
+    DelBtn.onclick = deleteArt;
+    let role = localStorage.getItem("role");
+    if (role === null || role === readerRole)
+      DelBtn.classList.add("hidden");
     Li.appendChild(elA);
-    dropdown.insertBefore(Li,dropdown.childNodes[dropdown.childNodes.length-1]);
+    Li.appendChild(DelBtn);
+    dropdown.insertBefore(Li, dropdown.childNodes[dropdown.childNodes.length - 1]);
     /*if (dropdown.childElementCount >= 4 && dropdown.lastElementChild.childElementCount > 1)
       dropdown.insertBefore(Li, dropdown.childNodes[dropdown.childElementCount]);
     else
       dropdown.appendChild(Li);*/
   }
 }
+
+function deleteArt(event) {
+  del(event.target.parentElement.id)
+}
+
+function delFromMainPage(event) {
+  curid = event.target.parentElement.children[1].id;
+  let elemt = document.getElementById(curid)
+  elemt.parentElement.removeChild(elemt);
+  if (document.getElementById(curid) !== null) {
+    document.getElementById(curid).parentElement.parentElement.removeChild(document.getElementById(curid).parentElement);
+    for (let i = 0; i < allarticles.length; i++) {
+      let element = allarticles[i];
+      if (element.id === curid) {
+        allarticles = allarticles.filter(function (item) {
+          return item.id !== element.id
+        })
+        sentArtToDel([element]);
+        break;
+      }
+    }
+  }
+  else
+  {
+    sentArtToDel([{id:curid,pic:"",header:"",content:"",catid:"",views:0}]);
+  }
+  /*if (currentArticle !== null && currentArticle!==undefined && currentArticle.id === curid) {
+    changeMainPage();
+  }*/
+}
+
+function del(curid) {
+  let elemt = document.getElementById(curid)
+  elemt.parentElement.removeChild(elemt);
+  if (document.getElementById(curid) !== null) {
+    document.getElementById(curid).parentElement.removeChild(document.getElementById(curid));
+    for (let i = 0; i < allarticles.length; i++) {
+      let element = allarticles[i];
+      if (element.id === curid) {
+        allarticles = allarticles.filter(function (item) {
+          return item.id !== element.id
+        })
+        sentArtToDel([element]);
+        break;
+      }
+    }
+  }
+  else
+  {
+    sentArtToDel([{id:curid,pic:"",header:"",content:"",catid:"",views:0}]);
+  }
+  if (currentArticle !== null && currentArticle!==undefined && currentArticle.id === curid) {
+    changeMainPage();
+    ChangeButtonName();
+  }
+}
+
+function sentArtToDel(articles) {
+  let xmlhttp = new XMLHttpRequest();
+  let string = server + "/deleteArts";
+  xmlhttp.open("POST", string, true);
+  xmlhttp.onreadystatechange = function () {
+    if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {}
+  }
+  xmlhttp.setRequestHeader("token", localStorage.getItem("tokenArticles"));
+  xmlhttp.send(JSON.stringify(
+    articles
+  ));
+}
+
 //Добавление кнопок для добавления статей и категорий
 function addButtons(parentid) {
   var dropdown = document.getElementById(parentid);
@@ -145,21 +278,71 @@ function addButtons(parentid) {
   categoryForm.appendChild(catButton);
   categoryForm.classList.add("addition-form");
 
-
-
   Li.appendChild(categoryForm);
   Li.appendChild(articleForm);
+  let role = localStorage.getItem("role");
+  if (role === null || role === readerRole) {
+    Li.classList.add("hidden");
+  }
   dropdown.appendChild(Li);
 }
 
-//Отдать название новой статьи по id категории, получить статью НЕПРОВЕРЕНО
+function buttonsForRole(role) {
+  if (role === null || role === readerRole) {
+    let forms = document.querySelectorAll(".addition-form");
+    forms.forEach(element => {
+      if (!element.parentElement.classList.contains("hidden")) {
+        element.parentElement.classList.add("hidden");
+      }
+    });
+    forms = document.querySelectorAll(".delBtn");
+    forms.forEach(element => {
+      /*if (!element.parentElement.classList.contains("hidden")) {
+        element.parentElement.classList.add("hidden");
+      }*/
+      if (!element.classList.contains("hidden")) {
+        element.classList.add("hidden");
+      }
+    });
+    forms = document.querySelectorAll(".fa-times");
+    forms.forEach(element => {
+      if (!element.classList.contains("hidden")) {
+        element.classList.add("hidden");
+      }
+    });
+  }
+  if (role === adminRole) {
+    let forms = document.querySelectorAll(".addition-form");
+    forms.forEach(element => {
+      if (element.parentElement.classList.contains("hidden")) {
+        element.parentElement.classList.remove("hidden");
+      }
+    });
+    forms = document.querySelectorAll(".delBtn");
+    forms.forEach(element => {
+      if (element.parentElement.classList.contains("hidden")) {
+        element.parentElement.classList.remove("hidden");
+      }
+      if (element.classList.contains("hidden")) {
+        element.classList.remove("hidden");
+      }
+    });
+    forms = document.querySelectorAll(".fa-times");
+    forms.forEach(element => {
+      if (element.classList.contains("hidden")) {
+        element.classList.remove("hidden");
+      }
+    });
+  }
+}
+
+//Отдать название новой статьи по id категории, получить статью
 function addNewArticle(event) {
   if (localStorage.getItem("tokenArticles") === null) {
     alert("Войдите в систему");
     return;
   }
-  if(event.target.parentElement.children[0].value==="")
-  {
+  if (event.target.parentElement.children[0].value === "") {
     alert("Введите имя");
     return;
   }
@@ -199,8 +382,7 @@ function addNewCategory(event) {
     alert("Войдите в систему");
     return;
   }
-  if(event.target.parentElement.children[0].value==="")
-  {
+  if (event.target.parentElement.children[0].value === "") {
     alert("Введите имя");
     return;
   }
@@ -215,7 +397,7 @@ function addNewCategory(event) {
         e.preventDefault();
       });
       let elem = document.getElementById(jsonobj.id)
-      if(elem.childNodes.length===0)
+      if (elem.childNodes.length === 0)
         addButtons(jsonobj.id);
     }
   }
@@ -280,14 +462,20 @@ function articlePage(article) {
   if (document.getElementById("constHeader").classList.contains("hidden")) {
     changeArticle(null);
   }
+  let role = localStorage.getItem("role");
+  if (role ===null || role===readerRole)
+    showChange(false);
+  if(role===adminRole)
+    showChange(true);
+  
   let file = document.getElementById("file");
-  file.value="";
+  file.value = "";
   let articlePage = document.getElementById("articlePage");
   document.getElementById("constHeader").textContent = article.header;
   let content = document.getElementById("constContent").querySelector(".art-container_cont-text")
   content.innerText = article.content;
   let image = articlePage.querySelector(".art-container_cont-image");
-  if (article.picture!==null && article.picture!=="" && article.picture!==undefined){
+  if (article.picture !== null && article.picture !== "" && article.picture !== undefined) {
     image.src = getPictureSrc(article.picture);
   } else {
     image.src = "";
@@ -299,9 +487,23 @@ function articlePage(article) {
   //image.src = article.image;
 }
 
-function getPictureSrc(string){
+function showChange(bool){
+  if(bool ===true){
+    if(document.getElementById("changebtn").classList.contains("hidden"))
+      document.getElementById("changebtn").classList.remove("hidden");
+  }
+  else
+  {
+    if(!document.getElementById("changebtn").classList.contains("hidden"))
+    {
+      document.getElementById("changebtn").classList.add("hidden");
+    }
+  }
+}
+
+function getPictureSrc(string) {
   let res = charToString(string);
-  res ="data:image/jpeg;base64,"+res;
+  res = "data:image/jpeg;base64," + res;
   return res;
 }
 
@@ -328,9 +530,12 @@ function changeMainPage() {
 
 //Добавляет новую статью на главную страницу
 function addArticleInPage(article) {
+  let columnandbutton = document.createElement("div");
+  columnandbutton.classList.add("col-sm-4");
   let main = document.getElementById("allArticles");
   var column = document.createElement("div");
-  column.classList.add("col-sm-4");
+  var icon = document.createElement("i");
+  //column.classList.add("col-sm-4");
   column.onclick = goToArticleFromPage;
   column.id = article.id;
   var panel = document.createElement("div");
@@ -338,6 +543,13 @@ function addArticleInPage(article) {
   panel.classList.add("panel-primary");
   var header = document.createElement("div");
   header.classList.add("panel-heading");
+  icon.classList.add("fa");
+  icon.classList.add("fa-times");
+  let role = localStorage.getItem("role");
+  if(role === null || role ===readerRole)
+    icon.classList.add("hidden");
+  icon.onclick = delFromMainPage;
+  //column.appendChild(icon);
   var imgDiv = document.createElement("div");
   imgDiv.classList.add("panel-body");
   var footer = document.createElement("div");
@@ -355,7 +567,9 @@ function addArticleInPage(article) {
   panel.appendChild(imgDiv);
   panel.appendChild(footer);
   column.appendChild(panel);
-  main.appendChild(column);
+  columnandbutton.appendChild(icon);
+  columnandbutton.appendChild(column);
+  main.appendChild(columnandbutton);
 }
 
 //Поиск при вводе
@@ -363,7 +577,7 @@ function searchOnInput(event) {
   let main = document.getElementById("allArticles");
   main.innerText = "";
   main.innerHTML = "";
-  if(event.target.value===""){
+  if (event.target.value === "") {
     setArticles();
     return;
   }
@@ -392,8 +606,13 @@ function login(event) {
     if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
       jsonobj = JSON.parse(xmlhttp.responseText);
       localStorage.setItem("tokenArticles", jsonobj["token"]);
+      localStorage.setItem("role", jsonobj["role"]);
       changeLoginForms();
       setName(userName);
+      buttonsForRole(localStorage.getItem("role"));
+      if(document.getElementById("allArticles").classList.contains("hidden")){
+        showChange(true);
+      }
     }
   }
   xmlhttp.send(JSON.stringify({
@@ -408,6 +627,7 @@ function VKRegistration() {
       getToken();
       changeLoginForms();
       setName(response.session.user.first_name)
+
     }
   });
   VK.Auth.login(null);
@@ -419,6 +639,7 @@ function getToken() {
     if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
       let token = JSON.parse(xmlhttp.responseText);
       localStorage.setItem("tokenArticles", token.token);
+      localStorage.setItem("role", token.role);
     };
   }
   xmlhttp.open("GET", server + "/token", true);
@@ -443,6 +664,7 @@ function registration(event) {
       localStorage.setItem("tokenArticles", jsonobj["token"]);
       changeLoginForms();
       setName(userName);
+      buttonsForRole(localStorage.getItem("role"));
     }
   }
   xmlhttp.open("POST", server + "/reg", true);
@@ -491,7 +713,9 @@ function logout() {
     return;
   let xmlhttp = new XMLHttpRequest();
   xmlhttp.onreadystatechange = function () {
-    if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {}
+    if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+
+    }
   }
   xmlhttp.open("POST", server + "/logout", true);
   xmlhttp.send(JSON.stringify({
@@ -499,7 +723,13 @@ function logout() {
   }));
   changeLoginForms();
   localStorage.removeItem("tokenArticles");
+  localStorage.removeItem("role");
+  buttonsForRole(localStorage.getItem("role"));
+  if(document.getElementById("allArticles").classList.contains("hidden")){
+    showChange(false);
+  }
   document.getElementById("pswd").value = "";
+
 }
 
 function changeArticle(event) {
@@ -555,7 +785,7 @@ function saveArticle(event) {
   UpdateTree(currentArticle);
 }
 
-function getPictureBytes(string){
+function getPictureBytes(string) {
   return string.substring("data:image/jpeg;base64,".length);
 }
 
@@ -572,7 +802,7 @@ function cancelSave(event) {
     myImg.name = currentArticle.name;
   else
     myImg.name = "";*/
-    articlePage(currentArticle);
+  articlePage(currentArticle);
 
 }
 
@@ -613,7 +843,7 @@ function strToCharCode(string) {
 function charToString(array) {
   result = [];
   for (let i = 0; i < array.length; i++) {
-    result+=String.fromCharCode(array[i]);
+    result += String.fromCharCode(array[i]);
   }
   return array;
 }
@@ -622,8 +852,8 @@ function exit() {
   logout();
 }
 
-function showPic(event){
-  if(event.target.readyState===2){
+function showPic(event) {
+  if (event.target.readyState === 2) {
     var img = document.querySelector(".art-container_cont-image");
     img.src = event.target.result;
     img.name = file.name;
