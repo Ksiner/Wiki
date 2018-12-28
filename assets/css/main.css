@@ -75,6 +75,9 @@ footer {
     z-index: 1;
 }
 
+.fa-times{
+    z-index: 15;
+}
 
 .art-container{
     display: flex;

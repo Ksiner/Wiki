@@ -84,6 +84,12 @@ func deleteCats(db db.DataBase) http.Handler {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
+		for _, cat := range cats {
+			fmt.Printf("id: %v \n", cat.ID)
+			fmt.Printf("Name: %v \n", cat.Name)
+			fmt.Printf("Parentid: %v \n", cat.Parentid)
+		}
+		fmt.Print(cats)
 		if err := db.DeleteCaregories(cats); err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return

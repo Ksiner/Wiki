@@ -183,7 +183,7 @@ func (dbc *DbConnMysql) DeleteArticles(arts []*model.Article) error {
 	defer db.Close()
 
 	for _, art := range arts {
-		db.Where("id = ?").Delete(&art)
+		db.Where("id = ?", art.ID).Delete(&art)
 	}
 	if db.Error != nil {
 		err = db.Error
@@ -203,7 +203,7 @@ func (dbc *DbConnMysql) DeleteCaregories(cats []*model.Category) error {
 	defer db.Close()
 
 	for _, cat := range cats {
-		db.Where("id = ?").Delete(&cat)
+		db.Where("id = ?", cat.ID).Delete(&cat)
 	}
 	if db.Error != nil {
 		err = db.Error

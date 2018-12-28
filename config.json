@@ -3,7 +3,7 @@
 	"Address": "localhost:8080",
 	"DBConfig": {
 		"DbDialect": "mysql",
-		"DBConnStr": "dbuser:Cgenybr_57@/wiki?charset=utf8&parseTime=True&loc=Local"	
+		"DBConnStr": "sanes:1qw21qw2@/wiki?charset=utf8&parseTime=True&loc=Local"	
 	},
 	"UIConfig": {
 		"Assets": "C:/Users/user/go/src/github.com/Ksiner/Wiki/assets/"
