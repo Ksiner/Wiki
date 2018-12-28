@@ -1,4 +1,4 @@
-var server = "http://localhost:8080";
+var server = "https://localhost:8080";
 var jsonresponse
 var userName;
 var allarticles
