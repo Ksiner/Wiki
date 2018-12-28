@@ -182,7 +182,9 @@ func (dbc *DbConnMysql) DeleteArticles(arts []*model.Article) error {
 	}
 	defer db.Close()
 
-	db.Delete(&arts)
+	for _, art := range arts {
+		db.Where("id = ?").Delete(&art)
+	}
 	if db.Error != nil {
 		err = db.Error
 		db.Error = nil
@@ -200,8 +202,9 @@ func (dbc *DbConnMysql) DeleteCaregories(cats []*model.Category) error {
 	}
 	defer db.Close()
 
-	db.Delete(&cats)
-
+	for _, cat := range cats {
+		db.Where("id = ?").Delete(&cat)
+	}
 	if db.Error != nil {
 		err = db.Error
 		db.Error = nil
@@ -315,6 +318,7 @@ func (dbc *DbConnMysql) RegisterUser(user *model.User) (*model.Token, error) {
 	}
 	defer db.Close()
 	user.ID = uuid.Must(uuid.NewV4()).String()
+	user.Role = "reader"
 	db.Save(&user)
 	if db.Error != nil {
 		err = db.Error

@@ -7,25 +7,32 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
   <link rel="stylesheet" type="text/css" href="css/main.css">
+  <link rel="author" href="https://github.com/Ksiner" />
+  <link rel="author" href="https://github.com/san4esN" />
   <script src="https://vk.com/js/api/openapi.js?160" type="text/javascript"></script>
   <style>
-    /* Remove the navbar's default rounded borders and increase the bottom margin */
-    .navbar {
-      margin-bottom: 50px;
-      border-radius: 0;
-    }
-
-    /* Remove the jumbotron's default bottom margin */
-     .jumbotron {
-      margin-bottom: 0;
-    }
-
-    /* Add a gray background color and some padding to the footer */
-    footer {
-      background-color: #f2f2f2;
-      padding: 25px;
-    }
-  </style>
+      /*div - контейнер для новости*/
+      .rss{margin:10px;  padding-bottom: 15px;}
+      
+      /*div - контейнер для всей ленты*/
+      .rss_container{padding:10px; background: #fff;}
+      
+      /*div - контейнер для медиа-файлов*/
+      .media{background-color:#f0f0f0; background-image:url(https://www.rss-script.ru/img/skrepka.gif); background-repeat:no-repeat; padding-top: 5px;padding-bottom: 5px;padding-left: 13px}
+      
+      /*div - ссылка на медиа-файл*/
+      .media a{color:#000000;font-size:0.7em}
+      
+      /*div - изображение медиа-файл*/
+      .media a img{height:16px; border:0px; vertical-align: middle; text-decoration: none; margin:3px;}
+      
+      /*div - контейнер даты новости и заголовка rss-канала*/
+      .rssdate{font-size:0.7em; color:#c0c0c0; margin:7px; }
+      
+      /*div - ссылка даты новости и заголовка rss-канала*/
+      .rssdate a{color:#c0c0c0;}
+      
+      </style>
 </head>
 
 <body>
@@ -180,7 +187,39 @@
   </div><br><br> -->
 
   <footer class="container-fluid text-center">
+    <div class="vcard">
+      <div>
+        <span class="category">ВУЗ</span>
+        <span class="fn org">ОмГТУ</span>
+      </div>
+      <div class="adr">
+        <span class="locality">г. Омск</span>,
+        <span class="street-address">проспект Мира, 11</span>
+      </div>
+      <span class="url">
+        <span class="value-title" title="https://omgtu.ru"> </span>
+      </span>
+    </div>
+    <div>Разработчики:
+      <span>Глухов Эдуард Игоревич,</span>
+      <span>Николаев Александр Константинович</span>
+    </div>
+    <a href="http://asoiu.com/" title="Официальный сайт кафедры АСОИУ ОмГТУ">Кафедра АСОИУ</a>
   </footer>
+  <div>
+      <script type="text/javascript">
+        var charset='UTF-8';
+        var t=document.getElementsByTagName('meta');
+        for(var i=0; i<t.length; i++){
+          var rg=/charset=["']?([^"']*)/g;
+          if(t[i].content.indexOf('charset')!=-1){
+            charset=rg.exec(t[i].content)[1];break;
+          }
+        }
+        document.write('<script type="text/javascript" src="https://www.rss-script.ru/rss-script.php?charset='+charset+'&rss[]=http%3A%2F%2Fnews.yandex.ru%2Findex.rss&count=10"><\/script>');
+      </script>
+      <noscript>Для просмотра этой RSS ленты требуется поддержка Java Script</noscript>
+    </div>
   <ul id='TempTest'></ul>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
