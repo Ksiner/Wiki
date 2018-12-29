@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-  <title>База знаний</title>
+  <title>Database</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
@@ -12,48 +12,48 @@
   <link rel="author" href="https://github.com/san4esN" />
   <script src="https://vk.com/js/api/openapi.js?160" type="text/javascript"></script>
   <style>
-      /*div - контейнер для новости*/
-      .rss{margin:10px;  padding-bottom: 15px;}
-      
-      /*div - контейнер для всей ленты*/
-      .rss_container{padding:10px; background: #fff;}
-      
-      /*div - контейнер для медиа-файлов*/
-      .media{background-color:#f0f0f0; background-image:url(https://www.rss-script.ru/img/skrepka.gif); background-repeat:no-repeat; padding-top: 5px;padding-bottom: 5px;padding-left: 13px}
-      
-      /*div - ссылка на медиа-файл*/
-      .media a{color:#000000;font-size:0.7em}
-      
-      /*div - изображение медиа-файл*/
-      .media a img{height:16px; border:0px; vertical-align: middle; text-decoration: none; margin:3px;}
-      
-      /*div - контейнер даты новости и заголовка rss-канала*/
-      .rssdate{font-size:0.7em; color:#c0c0c0; margin:7px; }
-      
-      /*div - ссылка даты новости и заголовка rss-канала*/
-      .rssdate a{color:#c0c0c0;}
-      
-      </style>
+		/*div - контейнер для новости*/
+		.rss{margin:10px;  padding-bottom: 15px;}
+		
+		/*div - контейнер для всей ленты*/
+		.rss_container{padding:10px; background: #fff;}
+		
+		/*div - контейнер для медиа-файлов*/
+		.media{background-color:#f0f0f0; background-image:url(https://www.rss-script.ru/img/skrepka.gif); background-repeat:no-repeat; padding-top: 5px;padding-bottom: 5px;padding-left: 13px}
+		
+		/*div - ссылка на медиа-файл*/
+		.media a{color:#000000;font-size:0.7em}
+		
+		/*div - изображение медиа-файл*/
+		.media a img{height:16px; border:0px; vertical-align: middle; text-decoration: none; margin:3px;}
+		
+		/*div - контейнер даты новости и заголовка rss-канала*/
+		.rssdate{font-size:0.7em; color:#c0c0c0; margin:7px; }
+		
+		/*div - ссылка даты новости и заголовка rss-канала*/
+		.rssdate a{color:#c0c0c0;}
+		
+  </style>
 </head>
 
 <body>
   <div class="container">
     <div id="bodyBack">
       <form class="login-form" id="login">
-        <input type="text" class="form-control margin" placeholder="Логин" id = "log"/>
-        <input type="password" class="form-control margin" placeholder="Пароль" id="pswd" />
-        <input type="button" value="Войти" class="btn margin" id = "entrebtn"/>
-        <button class="btn margin" id="regisbtn" type="button">Регистрация</button>
+        <input type="text" class="form-control margin" placeholder="Login" id = "log"/>
+        <input type="password" class="form-control margin" placeholder="Password" id="pswd" />
+        <input type="button" value="Log in" class="btn margin" id = "entrebtn"/>
+        <button class="btn margin" id="regisbtn" type="button">Sign in</button>
       </form>
       <div class = "login-form hidden" id="profile">
         <p></p>
-        <button class = "btn margin" id="logoutbtn">Выйти</button>
+        <button class = "btn margin" id="logoutbtn">Logout</button>
       </div>
-      <button class="btn margin" id="vk">ВКонтаке</button>
+      <button class="btn margin" id="vk">VK</button>
     </div>
     <div class="jumbotron">
-      <h1>База знаний</h1>
-      <p>Всё что нужно знать о самых популярных научно-фантастических вселенных</p>
+      <h1>Database</h1>
+      <p>Everything you need to know about popular sci-fi universes</p>
     </div>
   </div>
 
@@ -61,7 +61,7 @@
     <div class="container" style="display: flex;">
       <ul class="nav navbar-nav">
         <div class="dropdown margin">
-          <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" disabled>Tutorials
+          <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" disabled>Universes
             <span class="caret"></span></button>
           <ul id="menu" class="dropdown-menu">
             <li style="display: none;">
@@ -70,22 +70,10 @@
               </ul>
             </li>
           </ul>
-          <!-- <li><a tabindex="-1" href="#">HTML</a></li>
-                <li><a tabindex="-1" href="#">CSS</a></li>
-                <li>
-                  <a class="test" tabindex="-1" href="#">New dropdown <span class="caret"></span></a>
-                  <ul id="menu1" class="dropdown-menu">
-                    <li><a tabindex="-1" href="#">2nd level dropdown</a></li>
-                    <li><a tabindex="-1" href="#">2nd level dropdown</a></li>
-                    <li>
-                      <a class="test" href="#">Another dropdown <span class="caret"></span></a>
-                    </li>
-                  </ul>
-                </li> -->
       </ul>
       <div id="backDiv">
         <button id="back" class = "btn">
-         Обновить
+         Refresh
         </button>
       </div>
       <ul class="nav navbar-nav navbar-right">
@@ -108,9 +96,9 @@
       <form enctype="multipart/form-data" class="hidden" id="fileform">
         <p><input type="file" id="file">
         </form>
-      <button class="btn art-container_btn" id = "changebtn">Изменить</button>
-      <button class="btn art-container_btn hidden" id = "savebtn">Сохранить</button>
-      <button class="btn art-container_btn hidden" id = "cancelbtn">Отменить</button>
+      <button class="btn art-container_btn" id = "changebtn">Change</button>
+      <button class="btn art-container_btn hidden" id = "savebtn">Save</button>
+      <button class="btn art-container_btn hidden" id = "cancelbtn">Cancel</button>
     </div>
     <div class="art-container_content">
       <H1 id="constHeader">Header</H1>
@@ -127,65 +115,8 @@
   </div>
 
   <div class="container" id = "allArticles">
+  </div>
 
-    <!-- <div class="col-sm-4">
-      <div class="panel panel-primary">
-        <div class="panel-heading">BLACK FRIDAY DEAL</div>
-        <div class="panel-body"><img src="https://placehold.it/150x80?text=IMAGE" class="img-responsive" style="width:100%"
-            alt="Image"></div>
-        <div class="panel-footer">Buy 50 mobiles and get a gift card</div>
-      </div>
-    </div>
-    <div class="col-sm-4 ">
-      <div class="panel panel-primary">
-        <div class="panel-heading">BLACK FRIDAY DEAL</div>
-        <div class="panel-body"><img src="https://placehold.it/150x80?text=IMAGE" class="img-responsive" style="width:100%"
-            alt="Image"></div>
-        <div class="panel-footer">Buy 50 mobiles and get a gift card</div>
-      </div>
-    </div>
-    <div class="col-sm-4 ">
-      <div class="panel panel-primary">
-        <div class="panel-heading">BLACK FRIDAY DEAL</div>
-        <div class="panel-body"><img src="https://placehold.it/150x80?text=IMAGE" class="img-responsive" style="width:100%"
-            alt="Image"></div>
-        <div class="panel-footer">Buy 50 mobiles and get a gift card</div>
-      </div>
-    </div>
-
-    <div class="col-sm-4 ">
-      <div class="panel panel-primary">
-        <div class="panel-heading">BLACK FRIDAY DEAL</div>
-        <div class="panel-body"><img src="https://placehold.it/150x80?text=IMAGE" class="img-responsive" style="width:100%"
-            alt="Image"></div>
-        <div class="panel-footer">Buy 50 mobiles and get a gift card</div>
-      </div>
-    </div>
-    <div class="col-sm-4 ">
-      <div class="panel panel-primary">
-        <div class="panel-heading">BLACK FRIDAY DEAL</div>
-        <div class="panel-body"><img src="https://placehold.it/150x80?text=IMAGE" class="img-responsive" style="width:100%"
-            alt="Image"></div>
-        <div class="panel-footer">Buy 50 mobiles and get a gift card</div>
-      </div>
-    </div>
-    <div class="col-sm-4 ">
-      <div class="panel panel-primary">
-        <div class="panel-heading">BLACK FRIDAY DEAL</div>
-        <div class="panel-body"><img src="https://placehold.it/150x80?text=IMAGE" class="img-responsive" style="width:100%"
-            alt="Image"></div>
-        <div class="panel-footer">Buy 50 mobiles and get a gift card</div>
-      </div>
-    </div>
-    <div class="col-sm-4 ">
-      <div class="panel panel-primary">
-        <div class="panel-heading">BLACK FRIDAY DEAL</div>
-        <div class="panel-body"><img src="https://placehold.it/150x80?text=IMAGE" class="img-responsive" style="width:100%"
-            alt="Image"></div>
-        <div class="panel-footer">Buy 50 mobiles and get a gift card</div>
-      </div>
-    </div>
-  </div><br><br> -->
 
   <footer class="container-fluid text-center">
     <div class="vcard">
@@ -207,8 +138,8 @@
     </div>
     <a href="http://asoiu.com/" title="Официальный сайт кафедры АСОИУ ОмГТУ">Кафедра АСОИУ</a>
   </footer>
-  <div>
-      <script type="text/javascript">
+  <div id="scripts">
+      <!-- <script type="text/javascript">
         var charset='UTF-8';
         var t=document.getElementsByTagName('meta');
         for(var i=0; i<t.length; i++){
@@ -217,11 +148,27 @@
             charset=rg.exec(t[i].content)[1];break;
           }
         }
-        document.write('<script type="text/javascript" src="https://www.rss-script.ru/rss-script.php?charset='+charset+'&rss[]=http%3A%2F%2Fnews.yandex.ru%2Findex.rss&count=10"><\/script>');
-      </script>
-      <noscript>Для просмотра этой RSS ленты требуется поддержка Java Script</noscript>
-    </div>
-  <ul id='TempTest'></ul>
+        var script = document.createElement('script');
+        script.src = "https://www.rss-script.ru/rss-script.php?charset="+charset+"&rss[]=http%3A%2F%2Fnews.yandex.ru%2Findex.rss&count=10";
+        script.setAttribute("async","")
+        //'<script type="text/javascript" src="https://www.rss-script.ru/rss-script.php?charset='+charset+'&rss[]=http%3A%2F%2Fnews.yandex.ru%2Findex.rss&count=10"><\/script>'
+        document.getElementById("scripts").appendChild(script);
+      </script> -->
+      <!-- <script type="text/javascript">
+        var charset='UTF-8';
+        var t=document.getElementsByTagName('meta');
+        for(var i=0; i<t.length; i++){
+          var rg=/charset=["']?([^"']*)/g;
+          if(t[i].content.indexOf('charset')!=-1){
+            charset=rg.exec(t[i].content)[1];break;
+          }
+        }
+        document.write('<script type="text/javascript" src="https://www.rss-script.ru/rss-script.php?charset='+charset+'&rss[]=http%3A%2F%2Ffeeds.bbci.co.uk%2Fnews%2Frss.xml+&count=10"><\/script>');
+        </script> -->
+      <!-- <noscript>Для просмотра этой RSS ленты требуется поддержка Java Script</noscript> -->
+      <script type="text/javascript" src="https://www.rss-script.ru/rss-script.php?charset=UTF-8&rss[]=http%3A%2F%2Ffeeds.bbci.co.uk%2Fnews%2Frss.xml+&count=10""></script>
+      <noscript>To see rss you need Java Script</noscript>
+  </div>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jsSHA/2.2.0/sha512.js"></script>

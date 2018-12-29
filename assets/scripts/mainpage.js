@@ -1,4 +1,4 @@
-var server = "http://localhost:8080";
+var server = "http://localhost:8123";
 var jsonresponse
 var userName;
 var allarticles
@@ -34,6 +34,7 @@ function getTree() {
   };
   xmlhttp.open("GET", server + "/catTree", true);
   xmlhttp.send();
+  
 }
 
 //Запросить все статьи и занести их в стартовую страницу
@@ -90,7 +91,7 @@ function addNewList(name, idParent, idChild) {
   DelBtn.classList.add("delBtn");
   DelBtn.classList.add("btn");
   DelBtn.onclick = deleteCat;
-  DelBtn.value = "Удалить";
+  DelBtn.innerText = "Del";
   let role = localStorage.getItem("role");
   if (role === null || role === readerRole)
     DelBtn.classList.add("hidden");
@@ -166,7 +167,7 @@ function addArticleOnList(articles) {
     elA.textContent = articles[i].header;
     DelBtn.classList.add("delBtn");
     DelBtn.classList.add("btn");
-    DelBtn.value = "Удалить";
+    DelBtn.innerText = "Del";
     DelBtn.onclick = deleteArt;
     let role = localStorage.getItem("role");
     if (role === null || role === readerRole)
@@ -280,6 +281,7 @@ function addButtons(parentid) {
 
   Li.appendChild(categoryForm);
   Li.appendChild(articleForm);
+  Li.classList.add("liButtons");
   let role = localStorage.getItem("role");
   if (role === null || role === readerRole) {
     Li.classList.add("hidden");
@@ -453,7 +455,7 @@ function goToArticleFromPage(event) {
 
 //Отображает статью
 function articlePage(article) {
-  if (document.getElementById("back").innerText === "Обновить")
+  if (document.getElementById("back").innerText === "Refresh")
     ChangeButtonName();
   currentArticle = article;
   if (!document.getElementById("allArticles").classList.contains("hidden")) {
@@ -808,10 +810,10 @@ function cancelSave(event) {
 
 function ChangeButtonName() {
   button = document.getElementById("back");
-  if (button.innerText === "Назад")
-    button.innerText = "Обновить";
+  if (button.innerText === "Back")
+    button.innerText = "Refresh";
   else
-    button.innerText = "Назад";
+    button.innerText = "Back";
 }
 
 function back(event) {
